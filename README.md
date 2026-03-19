@@ -16,6 +16,8 @@ Earn Sage provides an automated, AI-enabled parametric insurance platform design
 ## Application Workflow
 Our platform operates on a zero-touch, highly automated lifecycle designed specifically for the fast-paced nature of gig work.
 
+![Earn Sage Application Workflow](./docs/Diagram.jpg)
+
 1. **Optimized Onboarding:** The delivery partner registers via our platform, linking their primary gig-worker ID, primary delivery zones, and payment details.
 2. **AI Risk Assessment & Policy Generation:** Upon registration, our AI engine utilizes predictive risk modeling specific to the persona to evaluate historical delivery zones and generate a customized risk profile.
 3. **Real-Time Parametric Monitoring:** Once the weekly policy is active, our backend continuously monitors real-time triggers using third-party APIs (weather, traffic, air quality) mapped against the worker's active geographical zone.
