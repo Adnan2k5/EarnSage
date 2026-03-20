@@ -37,6 +37,9 @@ export const metadata: Metadata = {
   },
 }
 
+import { MobileWrapper } from '@/components/shared/MobileWrapper'
+import { BottomNav } from '@/components/shared/BottomNav'
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -44,8 +47,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
+      <body className="antialiased">
+        <MobileWrapper>
+          {children}
+          {/* BottomNav is handled inside individual page layouts or via a client component check */}
+        </MobileWrapper>
         <Analytics />
       </body>
     </html>

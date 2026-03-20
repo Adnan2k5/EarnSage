@@ -1,115 +1,148 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+/* ── Fonts ───────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Sora:wght@100..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
-/* ── Custom animations ─────────────────────────────────────────────────────── */
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes scale-in {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.animate-fade-in-up {
-  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animate-scale-in {
-  animation: scale-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* ── Professional Settings ─────────────────────────────────────────────────── */
-html {
-  scroll-behavior: smooth;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #020617;
-  color: #f8fafc;
-}
-
-* {
-  -webkit-tap-highlight-color: transparent;
-  outline-color: rgba(59, 130, 246, 0.5);
-}
-
-/* Hide scrollbar */
-::-webkit-scrollbar { display: none; }
-* { scrollbar-width: none; -ms-overflow-style: none; }
-
-/* Safe Area Insets */
-.pt-safe { padding-top: env(safe-area-inset-top, 0px); }
-.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
-
-/* ── Design Tokens (Premium Fintech) ────────────────────────────────────────── */
+/* ── Design Tokens ────────────────────────────────────────────────────────── */
 :root {
-  --background: #020617;
-  --foreground: #f8fafc;
-  --card: #0f172a;
-  --card-border: rgba(255, 255, 255, 0.06);
-  --primary: #3b82f6;
-  --primary-hover: #2563eb;
-  --accent: #10b981;
-  --muted: #64748b;
+  --primary: #FF6B2B;
+  --secondary: #0F1E2E;
+  --accent: #00D4AA;
+  --alert: #FFD166;
+  --background: #F5F7FA;
+  --card: #FFFFFF;
+  --text-primary: #1A1A2E;
+  --text-muted: #6B7280;
   --radius: 12px;
 }
 
 @theme inline {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'DM Sans', sans-serif;
+  --font-heading: 'Sora', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-alert: var(--alert);
+  --color-bg-base: var(--background);
+  --color-card: var(--card);
+  --color-text-main: var(--text-primary);
+  --color-text-dim: var(--text-muted);
+
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
   
-  --color-brand-primary: #3b82f6;
-  --color-brand-success: #10b981;
-  --color-brand-warning: #f59e0b;
-  --color-brand-danger: #ef4444;
-  
-  --color-surface-base: #020617;
-  --color-surface-card: #0f172a;
-  --color-surface-border: rgba(255, 255, 255, 0.08);
+  --shadow-subtle: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-card: 0 8px 16px rgba(0, 0, 0, 0.08);
 }
 
 @layer base {
-  body {
+  html {
     background-color: var(--background);
-    color: var(--foreground);
-    @apply antialiased selection:bg-blue-500/30;
-    font-feature-settings: "cv02", "cv05", "cv11", "ss01";
+    color: var(--text-primary);
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    font-family: 'DM Sans', sans-serif;
+    @apply antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Sora', sans-serif;
+    font-weight: 700;
   }
 }
 
-/* ── Premium Utilities ─────────────────────────────────────────────────────── */
-.glass-panel {
-  background: rgba(15, 23, 42, 0.6);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* ── Layout Utilities ─────────────────────────────────────────────────────── */
+.mobile-wrapper {
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  background-color: var(--background);
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
-.text-gradient {
-  background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+.pb-nav {
+  padding-bottom: 90px;
 }
 
-.btn-primary {
-  background: #3b82f6;
-  color: white;
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+/* ── Interaction Helpers ──────────────────────────────────────────────────── */
+.touch-target {
+  min-height: 48px;
+  min-width: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.btn-primary:active {
-  transform: scale(0.96);
-  background: #2563eb;
+/* ── Custom Animations ─────────────────────────────────────────────────────── */
+@keyframes rain {
+  0% { transform: translateY(-100vh) rotate(15deg); opacity: 0; }
+  20% { opacity: 0.4; }
+  80% { opacity: 0.4; }
+  100% { transform: translateY(100vh) rotate(15deg); opacity: 0; }
 }
 
-.card-hover {
-  transition: transform 0.2s, border-color 0.2s;
+.rain-drop {
+  position: absolute;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.6));
+  width: 1px;
+  height: 60px;
+  pointer-events: none;
+  animation: rain linear infinite;
 }
 
-.card-hover:active {
-  transform: translateY(2px);
-  border-color: rgba(255, 255, 255, 0.15);
+@keyframes pulse-success {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 212, 170, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 212, 170, 0); }
+}
+
+.animate-pulse-success {
+  animation: pulse-success 2s infinite;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+  40%, 60% { transform: translate3d(3px, 0, 0); }
+}
+
+.animate-shake {
+  animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* ── Glassmorphism ───────────────────────────────────────────────────────── */
+.glass {
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.glass-dark {
+  background: rgba(15, 30, 46, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ── Skeleton Loaders ─────────────────────────────────────────────────────── */
+.skeleton {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
