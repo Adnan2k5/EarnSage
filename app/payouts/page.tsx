@@ -1,115 +1,113 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Filter, Download, Wallet, CloudRain, Wind, AlertTriangle, ChevronRight, Search, Calendar, CheckCircle2, Clock, ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronRight, Filter, Download, CloudRain, Wind, AlertTriangle, Wallet, ArrowUpRight, Search, Clock, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { MobileWrapper } from '@/components/shared/MobileWrapper';
 
-const payoutHistory = [
-  { month: 'April 2024', total: '₹2,400', items: [
-    { id: '1', type: 'Rain', zone: 'Koramangala', date: '12 Apr', amount: '₹800', status: 'Completed', color: 'text-accent' },
-    { id: '2', type: 'AQI', zone: 'Whitefield', date: '08 Apr', amount: '₹800', status: 'Completed', color: 'text-accent' },
-    { id: '3', type: 'Rain', zone: 'Indiranagar', date: '02 Apr', amount: '₹800', status: 'Completed', color: 'text-accent' },
-  ]},
-  { month: 'March 2024', total: '₹1,600', items: [
-    { id: '4', type: 'Flood', zone: 'Bellandur', date: '28 Mar', amount: '₹800', status: 'Completed', color: 'text-accent' },
-    { id: '5', type: 'Rain', zone: 'Koramangala', date: '15 Mar', amount: '₹800', status: 'Completed', color: 'text-accent' },
-  ]}
+const payouts = [
+  { id: '1', type: 'Rainfall', amount: '300.00', date: 'Mar 12, 2025', time: '1hr 42min', status: 'PAID', zone: 'Koramangala', icon: CloudRain },
+  { id: '2', type: 'Flood', amount: '450.00', date: 'Mar 03, 2025', time: '2hr 11min', status: 'PAID', zone: 'Indiranagar', icon: AlertTriangle },
+  { id: '3', type: 'AQI Level', amount: '300.00', date: 'Feb 22, 2025', time: '3hr 05min', status: 'PAID', zone: 'HSR Layout', icon: Wind },
+  { id: '4', type: 'Rainfall', amount: '300.00', date: 'Feb 08, 2025', time: '0hr 58min', status: 'PAID', zone: 'Koramangala', icon: CloudRain },
 ];
 
-export default function Payouts() {
+export default function PayoutCenter() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState('All');
+  const [activeFilter, setActiveFilter] = useState('All');
 
   return (
-    <MobileWrapper withNav className="bg-secondary text-white pb-24">
-      <header className="px-6 pt-8 pb-4">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-display-l">Payouts</h1>
-          <button className="touch-target w-10 h-10 bg-white/5 rounded-xl border border-white/10 flex items-center justify-center">
-            <Download size={20} className="text-primary" />
-          </button>
-        </div>
+    <MobileWrapper withNav className="bg-surface-base px-6 pt-12 pb-24">
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-display-l">Your Payouts</h1>
+        <button className="w-10 h-10 rounded-xl bg-white border border-border-light flex items-center justify-center text-ink-primary shadow-sm hover:border-border-mid">
+           <Download size={18} />
+        </button>
+      </header>
 
-        {/* Balance Card */}
-        <Card variant="gradient" className="bg-gradient-to-br from-[#0A1628] to-[#1E3A5F] p-6 text-white border-0 shadow-raised mb-8">
-          <div className="flex justify-between items-start mb-6">
-            <div>
-              <div className="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-1">Lifetime Protection Earned</div>
-              <div className="text-3xl font-space-mono font-bold">₹14,200</div>
-            </div>
-            <div className="bg-accent/20 text-accent px-2 py-1 rounded text-[10px] font-bold uppercase tracking-widest border border-accent/20 flex items-center gap-1.5">
-              <CheckCircle2 size={12} /> KYC Verified
-            </div>
+      <div className="space-y-8">
+        {/* Summary Card */}
+        <Card variant="dark" className="p-8 relative overflow-hidden group">
+          <div className="space-y-1 mb-8 relative z-10">
+            <div className="text-[10px] font-bold text-white/50 uppercase tracking-[0.2em]">Total Protected Earnings</div>
+            <div className="text-mono-xl text-[44px] text-white">₹2,040</div>
+            <div className="text-caption text-white/50 mt-1 uppercase tracking-widest">7 payouts this quarter</div>
           </div>
-          <div className="flex gap-3">
-            <button className="flex-1 h-12 bg-primary rounded-xl flex items-center justify-center gap-2 text-xs font-bold shadow-orange group transition-all">
-              Withdraw Funds <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center border border-white/10">
-              <Clock size={20} />
-            </button>
+          
+          <div className="h-10 w-full relative z-10 flex items-end gap-1 px-1 opacity-50">
+             {[30, 50, 40, 70, 60, 80, 50, 90, 40, 60].map((h, i) => (
+                <div key={i} className="flex-1 bg-white/20 rounded-t-sm" style={{ height: `${h}%` }} />
+             ))}
+          </div>
+          
+          <Wallet className="absolute right-[-20px] bottom-[-20px] w-32 h-32 text-white/5 -rotate-12" />
+          <div className="absolute top-0 right-0 p-6">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white backdrop-blur-sm">
+              <ArrowUpRight size={20} />
+            </div>
           </div>
         </Card>
 
-        {/* Tabs */}
-        <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-6 px-6 mb-6">
-          {['All', 'Completed', 'Scheduled', 'Pending'].map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
+        {/* Filter Tabs */}
+        <div className="flex gap-2 p-1.5 bg-surface-raised border border-border-light rounded-full overflow-x-auto no-scrollbar">
+           {['All', 'Alerts', 'Payouts', 'System'].map(f => (
+             <button 
+              key={f}
+              onClick={() => setActiveFilter(f)}
               className={cn(
-                "px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest transition-all shrink-0 border-1.5",
-                activeTab === tab ? "bg-primary border-primary text-white shadow-orange" : "bg-white/5 border-white/10 text-text-muted"
+                "px-6 py-2 rounded-full text-[10px] font-extrabold uppercase tracking-widest transition-all whitespace-nowrap",
+                activeFilter === f ? "bg-ink-primary text-white" : "text-ink-muted"
               )}
-            >
-              {tab}
-            </button>
-          ))}
+             >
+               {f}
+             </button>
+           ))}
         </div>
-      </header>
 
-      <div className="px-6 space-y-8">
-        {payoutHistory.map((group) => (
-          <section key={group.month}>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-xs font-bold uppercase tracking-widest text-text-muted">{group.month}</h3>
-              <span className="text-xs text-text-muted font-bold font-space-mono">{group.total}</span>
-            </div>
-            <div className="space-y-3">
-              {group.items.map((item) => (
-                <Card 
-                  key={item.id} 
-                  variant="dark" 
-                  onClick={() => router.push(`/payouts/${item.id}`)}
-                  className="bg-white/5 border-white/5 p-4 flex justify-between items-center group cursor-pointer active:scale-98 transition-all"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:bg-primary/5 transition-colors">
-                      {item.type === 'Rain' && <CloudRain className="text-primary w-6 h-6" />}
-                      {item.type === 'Flood' && <AlertTriangle className="text-warning w-6 h-6" />}
-                      {item.type === 'AQI' && <Wind className="text-accent w-6 h-6" />}
-                    </div>
-                    <div>
-                      <div className="text-sm font-bold group-hover:text-primary transition-colors">{item.zone}</div>
-                      <div className="text-[10px] text-text-muted uppercase font-bold tracking-widest mt-1">
-                        {item.date} • {item.type} Trigger
+        {/* Payout List */}
+        <div className="space-y-3">
+           {payouts.map((p) => (
+             <Card 
+              key={p.id} 
+              className="p-5 border-border-light bg-white hover:border-border-mid transition-all group cursor-pointer"
+              onClick={() => router.push(`/payouts/${p.id}`)}
+             >
+                <div className="flex justify-between items-start mb-4">
+                   <div className="flex items-center gap-4">
+                      <div className="w-11 h-11 rounded-full bg-surface-raised border border-border-light flex items-center justify-center">
+                         <p.icon className="text-ink-primary group-hover:scale-110 transition-transform" size={20} />
                       </div>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-lg font-space-mono font-bold text-white mb-1">{item.amount}</div>
-                    <div className={cn("text-[10px] font-bold uppercase tracking-widest", item.color)}>{item.status}</div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </section>
-        ))}
+                      <div>
+                        <div className="text-xs font-bold text-ink-primary italic">{p.type} Protection</div>
+                        <div className="text-[10px] text-ink-muted uppercase font-bold tracking-widest mt-1">{p.zone} · {p.date}</div>
+                      </div>
+                   </div>
+                   <div className="text-right">
+                     <div className="text-mono-l text-lg">₹{p.amount}</div>
+                     <div className="flex items-center justify-end gap-1.5 mt-1 text-status-success">
+                        <CheckCircle2 size={10} />
+                        <span className="text-[9px] font-bold uppercase tracking-widest">Paid</span>
+                     </div>
+                   </div>
+                </div>
+                
+                <div className="h-[1px] w-full bg-surface-sunken mb-4" />
+                
+                <div className="flex justify-between items-center text-[10px] text-ink-hint font-bold uppercase tracking-widest px-1">
+                   <div className="flex items-center gap-1.5"><Clock size={12} /> {p.time} processing</div>
+                   <div className="flex items-center gap-1 group-hover:text-primary transition-colors">Details <ChevronRight size={14} /></div>
+                </div>
+             </Card>
+           ))}
+        </div>
+
+        <Button variant="ghost" className="w-full text-ink-muted uppercase tracking-[0.2em] text-[10px] h-12">
+           Download Full Statement
+        </Button>
       </div>
     </MobileWrapper>
   );

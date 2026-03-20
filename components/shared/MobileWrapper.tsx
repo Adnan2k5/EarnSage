@@ -10,13 +10,21 @@ interface MobileWrapperProps {
   withNav?: boolean;
 }
 
-export function MobileWrapper({ children, className, withNav = false }: MobileWrapperProps) {
+export const MobileWrapper: React.FC<MobileWrapperProps> = ({ 
+  children, 
+  className,
+  withNav = false 
+}) => {
   return (
-    <div className={cn("mobile-wrapper", className, withNav && "pb-nav")}>
-      <main className="flex-1 flex flex-col">
+    <div className="bg-[#CBD5E1] min-h-screen">
+      <main className={cn(
+        "mobile-wrapper shadow-2xl",
+        withNav && "pb-nav",
+        className
+      )}>
         {children}
+        {withNav && <BottomNav />}
       </main>
-      {withNav && <BottomNav />}
     </div>
   );
-}
+};

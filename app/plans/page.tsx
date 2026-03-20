@@ -1,187 +1,155 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ArrowRight, Check, Shield, Zap, Star, ShieldCheck, ChevronDown, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Check, Shield, Zap, Sparkles, ChevronRight, Info, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { MobileWrapper } from '@/components/shared/MobileWrapper';
 
 const plans = [
   {
-    id: 'basic',
-    name: 'Basic Cover',
-    price: 29,
-    description: 'Perfect for light rain protection.',
-    features: ['Moderate Rain', '₹400 per payout', 'Weekly Settlement'],
-    color: 'border-white/10'
+    name: "BASIC GUARD",
+    price: "29",
+    maxPayout: "₹1,200",
+    features: ["Rainfall Protection", "AQI Monitoring", "Digital Onboarding", "Email Support"],
+    variant: "base",
   },
   {
-    id: 'standard',
-    name: 'Standard Pro',
-    price: 49,
-    popular: true,
-    description: 'Most chosen by top delivery partners.',
-    features: ['Heavy Rain & Storms', 'AQI > 300 Alerts', '₹800 per payout', 'Priority Settlement', 'Live Trigger Map'],
-    color: 'border-primary'
+    name: "STANDARD SHIELD",
+    price: "49",
+    maxPayout: "₹2,100",
+    features: ["Rainfall + Flood", "AQI + Wind", "Priority Payouts", "WhatsApp Alerts", "Zone Mapping"],
+    variant: "elevated",
+    recommended: true,
   },
   {
-    id: 'premium',
-    name: 'Ultra Shield',
-    price: 89,
-    description: 'Total income security 24/7.',
-    features: ['All Triggers Included', 'Curfew & Flood Cover', '₹1,200 per payout', 'Instant Payout', 'Elite Support'],
-    color: 'border-[#00D4AA]'
+    name: "PREMIUM ARMOR",
+    price: "79",
+    maxPayout: "₹3,500",
+    features: ["Full Civic Protection", "Curfew Coverage", "Express 1hr Payout", "Personal Account Manager", "Multi-zone Support"],
+    variant: "dark",
   }
 ];
 
-export default function Plans() {
+export default function PlanSelection() {
   const [billing, setBilling] = useState<'weekly' | 'monthly'>('weekly');
-  const [selectedPlan, setSelectedPlan] = useState('standard');
   const router = useRouter();
 
-  const getPrice = (base: number) => billing === 'monthly' ? base * 4 * 0.9 : base;
-
   return (
-    <div className="mobile-wrapper bg-secondary text-white p-6 pb-24">
-      <header className="flex items-center justify-between mb-8 pt-6">
-        <button onClick={() => router.back()} className="touch-target -ml-4">
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <h1 className="text-heading">Choose Protection</h1>
-        <div className="w-10" />
+    <MobileWrapper className="bg-surface-base px-6 pt-12 pb-12 overflow-y-auto">
+      <header className="mb-8">
+        <h1 className="text-display-l mb-2">Choose Your Shield</h1>
+        <p className="text-body text-ink-muted leading-relaxed">Select the protection level that fits your delivery routine.</p>
       </header>
 
-      {/* Switcher */}
+      {/* Billing Toggle */}
       <div className="flex justify-center mb-10">
-        <div className="bg-white/5 p-1 rounded-full flex relative border border-white/10">
-          <motion.div 
-            layoutId="active-bg"
-            className="absolute inset-1 bg-primary rounded-full z-0"
-            initial={false}
-            animate={{ x: billing === 'weekly' ? 0 : 100 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-            style={{ width: '100px' }}
-          />
+        <div className="p-1.5 bg-surface-raised border border-border-light rounded-full flex gap-1 relative">
           <button 
             onClick={() => setBilling('weekly')}
-            className={cn("relative z-10 w-[100px] py-2 text-xs font-bold uppercase transition-colors", billing === 'weekly' ? 'text-white' : 'text-text-muted')}
+            className={cn(
+              "px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all z-10",
+              billing === 'weekly' ? "bg-ink-primary text-white" : "text-ink-muted"
+            )}
           >
             Weekly
           </button>
           <button 
             onClick={() => setBilling('monthly')}
-            className={cn("relative z-10 w-[100px] py-2 text-xs font-bold uppercase transition-colors", billing === 'monthly' ? 'text-white' : 'text-text-muted')}
+            className={cn(
+              "px-6 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all z-10 flex items-center gap-2",
+              billing === 'monthly' ? "bg-ink-primary text-white" : "text-ink-muted"
+            )}
           >
             Monthly
+            <span className={cn(
+              "px-2 py-0.5 rounded-full text-[9px] font-bold uppercase",
+              billing === 'monthly' ? "bg-primary text-white" : "bg-status-success/10 text-status-success border border-status-success/20"
+            )}>
+              -15%
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Plan Stack */}
-      <div className="space-y-4 mb-12">
+      {/* Plan Cards */}
+      <div className="space-y-6">
         {plans.map((plan) => (
-          <motion.div
-            key={plan.id}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setSelectedPlan(plan.id)}
+          <Card 
+            key={plan.name}
+            variant={plan.variant as any}
             className={cn(
-              "relative bg-white/5 border-1.5 p-6 rounded-2xl cursor-pointer transition-all",
-              selectedPlan === plan.id ? plan.color : "border-transparent",
-              plan.popular && "pt-10"
+              "relative group p-8",
+              plan.recommended && "border-2 border-ink-primary"
             )}
           >
-            {plan.popular && (
-              <div className="absolute top-0 right-6 bg-primary text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-b-lg">
+            {plan.recommended && (
+              <div className="absolute top-0 right-8 -translate-y-1/2 bg-ink-primary text-white px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-widest border-4 border-surface-base">
                 Recommended
               </div>
             )}
-            
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
-                <p className="text-xs text-text-muted">{plan.description}</p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-space-mono font-bold text-white">₹{getPrice(plan.price)}</div>
-                <div className="text-[10px] text-text-muted uppercase font-bold">per {billing === 'weekly' ? 'week' : 'month'}</div>
-              </div>
-            </div>
 
-            <div className="grid grid-cols-1 gap-2">
-              {plan.features.slice(0, 3).map(feat => (
-                <div key={feat} className="flex items-center gap-2 text-sm text-text-secondary">
-                  <Check size={14} className="text-accent shrink-0" />
-                  {feat}
+            <div className="space-y-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-heading mb-1">{plan.name}</h3>
+                  <div className="text-caption">Maximum payout up to <span className="text-ink-primary font-bold">{plan.maxPayout}</span></div>
                 </div>
-              ))}
+                {plan.variant === 'dark' && <Shield className="text-primary w-6 h-6 fill-primary/10" />}
+              </div>
+
+              <div className="flex items-baseline gap-1">
+                <span className="text-mono-xl text-[44px]">₹{plan.price}</span>
+                <span className="text-body text-ink-hint">/ week</span>
+              </div>
+
+              <div className="h-[1px] w-full bg-surface-sunken opacity-50" />
+
+              <ul className="space-y-3">
+                {plan.features.map(f => (
+                  <li key={f} className="flex items-center gap-3 text-body">
+                    <div className="w-5 h-5 rounded-full bg-status-success/10 flex items-center justify-center border border-status-success/20">
+                      <Check className="text-status-success" size={12} strokeWidth={3} />
+                    </div>
+                    <span>{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Button 
+                variant={plan.variant === 'dark' ? 'primary' : 'primary'} 
+                className={cn(
+                  "w-full h-14 uppercase tracking-widest",
+                  plan.variant === 'dark' && "bg-[#FF6B2B] hover:bg-[#E8571A] border-none"
+                )}
+                onClick={() => router.push('/payment')}
+              >
+                Select Plan
+              </Button>
             </div>
-          </motion.div>
+          </Card>
         ))}
       </div>
 
-      {/* Trust Badge */}
-      <div className="flex items-center justify-center gap-6 mb-12 py-6 border-y border-white/5">
-        <div className="flex flex-col items-center gap-1">
-          <Star className="text-primary fill-primary w-5 h-5" />
-          <span className="text-[10px] font-bold text-text-muted uppercase">4.9 Star Rating</span>
-        </div>
-        <div className="flex flex-col items-center gap-1">
-          <ShieldCheck className="text-accent w-5 h-5" />
-          <span className="text-[10px] font-bold text-text-muted uppercase">ISO Certified</span>
-        </div>
-        <div className="flex flex-col items-center gap-1">
-          <CheckCircle2 className="text-safe w-5 h-5" />
-          <span className="text-[10px] font-bold text-text-muted uppercase">10k+ Partners</span>
+      <div className="mt-12 space-y-4 pt-8 border-t border-surface-sunken">
+        <div className="flex justify-between gap-4">
+           {[
+             { icon: Shield, label: "IRDAI Regulated" },
+             { icon: Zap, label: "Payout <4 hrs" },
+             { icon: Sparkles, label: "Cancel anytime" }
+           ].map((t, i) => (
+             <div key={i} className="flex-1 flex flex-col items-center gap-2 text-center text-[10px] text-ink-muted">
+               <div className="w-8 h-8 rounded-full bg-surface-raised border border-border-light flex items-center justify-center">
+                 <t.icon size={16} className="text-ink-primary" />
+               </div>
+               <span className="font-semibold uppercase tracking-widest">{t.label}</span>
+             </div>
+           ))}
         </div>
       </div>
-
-      {/* Comparison Preview */}
-      <div className="mb-12">
-        <h4 className="text-sm font-bold uppercase tracking-widest text-text-muted mb-6">Quick Comparison</h4>
-        <Card variant="dark" className="p-0 border-white/5 overflow-hidden">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-white/5 border-b border-white/10">
-              <tr>
-                <th className="p-4 font-bold">Feature</th>
-                <th className="p-4 font-bold text-primary text-center">Pro</th>
-                <th className="p-4 font-bold text-text-muted text-center">Basic</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/5">
-              <tr>
-                <td className="p-4 text-text-muted">Rain Payout</td>
-                <td className="p-4 font-bold text-primary text-center">₹800</td>
-                <td className="p-4 text-white text-center">₹400</td>
-              </tr>
-              <tr>
-                <td className="p-4 text-text-muted">AQI Cover</td>
-                <td className="p-4 text-center"><Check size={18} className="text-accent mx-auto" /></td>
-                <td className="p-4 text-center">—</td>
-              </tr>
-              <tr>
-                <td className="p-4 text-text-muted">Flood Cover</td>
-                <td className="p-4 text-center"><Check size={18} className="text-accent mx-auto" /></td>
-                <td className="p-4 text-center">—</td>
-              </tr>
-            </tbody>
-          </table>
-          <button className="w-full py-4 text-primary text-xs font-bold hover:bg-white/5 transition-colors uppercase tracking-widest">
-            Show Full Comparison
-          </button>
-        </Card>
-      </div>
-
-      <Button className="w-full mb-6" size="xl" onClick={() => router.push('/payment')}>
-        Activate {selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} <ArrowRight className="ml-2 w-5 h-5" />
-      </Button>
-
-      <div className="text-center">
-        <p className="text-[11px] text-text-muted leading-relaxed max-w-[80%] mx-auto">
-          Charges will be auto-deducted from your linked account every Monday. Cancel any time before Sunday.
-        </p>
-      </div>
-    </div>
+    </MobileWrapper>
   );
 }

@@ -2,141 +2,132 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronLeft, CloudRain, MapPin, Calendar, Clock, CheckCircle2, ShieldCheck, HelpCircle, ArrowRight, Download, ReceiptText } from 'lucide-react';
-import { useParams, useRouter } from 'next/navigation';
+import { ChevronLeft, ShieldCheck, Clock, MapPin, ExternalLink, Download, ArrowRight, Wallet, Info, CheckCircle2, CloudRain } from 'lucide-react';
+import { useRouter, useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { MobileWrapper } from '@/components/shared/MobileWrapper';
-
-const timelineSteps = [
-  { status: 'Completed', label: 'Trigger Detected', time: '12 Apr, 04:30 PM', desc: 'Heavy rain (>15mm/hr) detected in Koramangala.', icon: CloudRain, color: 'text-primary' },
-  { status: 'Completed', label: 'AI Verification', time: '12 Apr, 04:45 PM', desc: 'Zonal multi-sensor data confirmed the disruption.', icon: ShieldCheck, color: 'text-accent' },
-  { status: 'Completed', label: 'Payout Scheduled', time: '12 Apr, 05:00 PM', desc: '₹800 assigned to your linked UPI ID.', icon: Clock, color: 'text-warning' },
-  { status: 'Completed', label: 'Funds Disbursed', time: '15 Apr, 10:20 AM', desc: 'Successfully transferred to Paytm UPI.', icon: CheckCircle2, color: 'text-accent' },
-];
 
 export default function PayoutDetail() {
   const router = useRouter();
   const params = useParams();
 
   return (
-    <MobileWrapper className="bg-secondary text-white pb-12">
-      <header className="px-6 pt-8 pb-4 flex items-center justify-between mb-6">
-        <button onClick={() => router.back()} className="touch-target -ml-4">
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <h1 className="text-heading">Payout Detail</h1>
-        <button className="touch-target -mr-4">
-          <Download size={20} className="text-primary" />
-        </button>
+    <MobileWrapper className="bg-surface-base flex flex-col min-h-screen">
+      <header className="px-6 pt-8 pb-4">
+        <div className="flex items-center gap-4 mb-6">
+          <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-surface-raised border border-border-light flex items-center justify-center text-ink-primary shadow-sm hover:border-border-mid">
+            <ChevronLeft size={20} />
+          </button>
+          <h1 className="text-display-l">Payout Details</h1>
+        </div>
       </header>
 
-      <div className="px-6 space-y-8">
-        {/* Main Payout Card */}
-        <section className="text-center">
-          <div className="w-16 h-16 bg-accent/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-accent/20">
-            <CheckCircle2 className="text-accent w-8 h-8" />
+      <main className="flex-1 px-6 pb-24 space-y-8">
+        {/* Status Banner */}
+        <div className="bg-status-success/10 border border-status-success/20 p-6 rounded-2xl flex items-center gap-4 shadow-sm relative overflow-hidden">
+          <div className="w-12 h-12 rounded-full bg-status-success/20 flex items-center justify-center text-status-success relative z-10">
+            <CheckCircle2 size={24} />
           </div>
-          <h2 className="text-[40px] font-space-mono font-bold leading-none mb-1">₹800</h2>
-          <div className="bg-accent/20 text-accent px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest w-fit mx-auto border border-accent/20">
-            Successfully Disbursed
+          <div className="relative z-10">
+             <div className="text-heading text-status-success">Payout Successful</div>
+             <div className="text-caption font-bold text-ink-muted uppercase tracking-widest mt-1">Processed in 1hr 42min</div>
           </div>
-        </section>
+          <div className="absolute right-[-10px] top-[-10px] w-24 h-24 bg-status-success/5 rounded-full" />
+        </div>
 
-        {/* Evidence Card */}
-        <section>
-          <label className="text-caption text-text-muted uppercase tracking-wider font-semibold mb-4 block">
-            Evidence Captured
-          </label>
-          <Card variant="dark" className="p-0 border-white/5 overflow-hidden">
-            <div className="h-40 bg-[url('https://api.mapbox.com/styles/v1/mapbox/dark-v11/static/77.5946,12.9716,13/400x200?access_token=pk.mock')] bg-cover relative">
-              <div className="absolute inset-0 bg-primary/10" />
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <div className="w-4 h-4 bg-primary rounded-full animate-ping absolute inset-0" />
-                <MapPin className="text-primary w-6 h-6 relative drop-shadow-lg" />
+        {/* Amount Card */}
+        <Card variant="dark" className="p-8 text-center relative group">
+           <div className="text-[10px] font-bold text-white/50 uppercase tracking-[0.2em] mb-4">Amount Credited</div>
+           <div className="text-mono-xl text-[44px] text-white">₹300.00</div>
+           <div className="mt-4 inline-flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full text-[9px] font-bold text-white uppercase tracking-widest">
+              Ref ID: ES-2025-03-12-7821
+           </div>
+        </Card>
+
+        {/* Details List */}
+        <section className="space-y-4">
+           <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted px-2">Transaction Details</h3>
+           <Card className="p-5 border-border-light space-y-4 shadow-card">
+              <div className="flex justify-between items-center text-body">
+                 <span className="text-ink-muted underline underline-offset-4 decoration-border-light">Payout Type</span>
+                 <span className="font-bold text-ink-primary">Rainfall Protection</span>
               </div>
-              <div className="absolute bottom-3 left-3 bg-secondary/80 backdrop-blur-md px-2 py-1 rounded text-[9px] font-bold uppercase border border-white/10">
-                Koramangala 4th Block
+              <div className="flex justify-between items-center text-body">
+                 <span className="text-ink-muted underline underline-offset-4 decoration-border-light">Your Zone</span>
+                 <span className="font-bold text-ink-primary">Koramangala, BLR</span>
               </div>
-            </div>
-            <div className="p-4 grid grid-cols-2 gap-4">
-              <div className="space-y-1">
-                <div className="text-[10px] uppercase font-bold text-text-muted">Trigger Type</div>
-                <div className="text-sm font-bold flex items-center gap-1.5">
-                  <CloudRain size={14} className="text-primary" /> Heavy Rain
-                </div>
+              <div className="flex justify-between items-center text-body">
+                 <span className="text-ink-muted underline underline-offset-4 decoration-border-light">Condition</span>
+                 <span className="font-bold text-ink-primary italic">48.2mm/hr (Thresh: 50mm)</span>
               </div>
-              <div className="space-y-1 text-right">
-                <div className="text-[10px] uppercase font-bold text-text-muted">Intensity</div>
-                <div className="text-sm font-bold text-white">18.4 mm/hr</div>
+              <div className="flex justify-between items-center text-body">
+                 <span className="text-ink-muted underline underline-offset-4 decoration-border-light">Source</span>
+                 <span className="text-xs font-mono font-bold text-primary">IMD_STA_560034</span>
               </div>
-            </div>
-          </Card>
+           </Card>
         </section>
 
         {/* Timeline */}
-        <section>
-          <label className="text-caption text-text-muted uppercase tracking-wider font-semibold mb-6 block">
-            Payout Timeline
-          </label>
-          <div className="relative pl-8 space-y-10">
-            {/* Vertical Line */}
-            <div className="absolute left-[15px] top-2 bottom-8 w-[2px] bg-white/5" />
-            
-            {timelineSteps.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <div key={step.label} className="relative">
-                  {/* Pin */}
-                  <div className={cn(
-                    "absolute -left-[32px] top-0 w-8 h-8 rounded-full bg-secondary border-2 border-white/10 flex items-center justify-center z-10",
-                    i === 0 ? "border-primary" : i === timelineSteps.length - 1 ? "border-accent bg-accent/10" : "border-white/10"
-                  )}>
-                    <Icon size={14} className={cn(i === 0 ? "text-primary" : i === timelineSteps.length - 1 ? "text-accent" : "text-text-muted")} />
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <div className="flex justify-between items-center">
-                      <h4 className="text-sm font-bold text-white">{step.label}</h4>
-                      <span className="text-[10px] font-space-mono text-text-muted">{step.time}</span>
+        <section className="space-y-4">
+           <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted px-2">Process Timeline</h3>
+           <div className="relative pl-8 space-y-8 before:absolute before:left-[15px] before:top-2 before:bottom-2 before:w-[2px] before:bg-surface-sunken">
+              <div className="relative">
+                 <div className="absolute left-[-29px] w-4 h-4 rounded-full bg-ink-primary border-4 border-white shadow-sm ring-4 ring-ink-primary/5" />
+                 <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-xs font-bold text-ink-primary italic">Trigger Detected</div>
+                      <div className="text-[11px] text-ink-muted">Rainfall threshold reached in Koramangala</div>
                     </div>
-                    <p className="text-xs text-text-muted leading-relaxed max-w-[90%]">
-                      {step.desc}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+                    <div className="text-[10px] font-mono text-ink-hint">14:12</div>
+                 </div>
+              </div>
+              <div className="relative">
+                 <div className="absolute left-[-29px] w-4 h-4 rounded-full bg-ink-primary border-4 border-white shadow-sm ring-4 ring-ink-primary/5" />
+                 <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-xs font-bold text-ink-primary italic">Verification Complete</div>
+                      <div className="text-[11px] text-ink-muted">AI engine validated satellite + ground data</div>
+                    </div>
+                    <div className="text-[10px] font-mono text-ink-hint">14:28</div>
+                 </div>
+              </div>
+              <div className="relative">
+                 <div className="absolute left-[-29px] w-4 h-4 rounded-full bg-status-success border-4 border-white shadow-sm ring-4 ring-status-success/5" />
+                 <div className="flex justify-between items-start">
+                    <div>
+                      <div className="text-xs font-bold text-status-success italic">Payout Dispatched</div>
+                      <div className="text-[11px] text-ink-muted uppercase tracking-widest font-bold">UPI: ravi.kumar@okaxis</div>
+                    </div>
+                    <div className="text-[10px] font-mono text-ink-hint">15:54</div>
+                 </div>
+              </div>
+           </div>
         </section>
 
-        {/* Policy Info */}
-        <Card variant="dark" className="bg-white/5 border-white/5 p-5">
-          <div className="flex items-center gap-4 mb-4">
-            <ReceiptText className="text-primary w-5 h-5" />
-            <h4 className="text-sm font-bold uppercase tracking-widest text-text-muted">Protection Summary</h4>
-          </div>
-          <div className="grid grid-cols-2 gap-y-4 text-xs">
-            <div className="text-text-muted uppercase font-bold tracking-[0.1em] text-[10px]">Policy ID</div>
-            <div className="text-white font-space-mono text-right">ES-4928-VX</div>
-            <div className="text-text-muted uppercase font-bold tracking-[0.1em] text-[10px]">Session ID</div>
-            <div className="text-white font-space-mono text-right">SES-1204-KM</div>
-            <div className="text-text-muted uppercase font-bold tracking-[0.1em] text-[10px]">Verified By</div>
-            <div className="text-accent font-bold text-right uppercase tracking-widest text-[9px]">Earn Sage AI</div>
-          </div>
-        </Card>
-
-        {/* Actions */}
-        <div className="flex gap-4 pt-4">
-          <Button variant="ghost" className="flex-1" size="lg">
-            <HelpCircle size={18} className="mr-2" /> Help
-          </Button>
-          <Button className="flex-1" size="lg">
-            Share <ArrowRight size={18} className="ml-2" />
-          </Button>
-        </div>
-      </div>
+        {/* Map Snapshot */}
+        <section className="space-y-4 pb-12">
+           <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted px-2">Event Evidence</h3>
+           <div className="relative aspect-video rounded-3xl overflow-hidden border border-border-light shadow-md bg-[#F1F3F4] group">
+              <div className="absolute inset-0 bg-[url('https://api.mapbox.com/styles/v1/mapbox/light-v11/static/77.6412,12.9716,13/400x200?access_token=pk.mock')] bg-cover opacity-80" />
+              <div className="absolute inset-0 bg-status-danger/10" />
+              <div className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 bg-white/90 backdrop-blur rounded-full border border-border-light shadow-md">
+                 <div className="w-2 h-2 rounded-full bg-status-danger animate-pulse" />
+                 <span className="text-[9px] font-bold uppercase tracking-widest text-ink-primary">Koramangala Trigger Zone</span>
+              </div>
+           </div>
+           
+           <div className="flex gap-3">
+              <Button variant="ghost" className="flex-1 h-12 uppercase tracking-[0.2em] text-[10px]">
+                 <Download size={16} className="mr-2" /> Receipt
+              </Button>
+              <Button variant="ghost" className="flex-1 h-12 uppercase tracking-[0.2em] text-[10px]">
+                 <Info size={16} className="mr-2" /> Dispute
+              </Button>
+           </div>
+        </section>
+      </main>
     </MobileWrapper>
   );
 }

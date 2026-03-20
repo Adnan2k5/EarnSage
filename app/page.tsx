@@ -2,233 +2,206 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, Zap, CloudRain, ShieldCheck, ArrowRight, Smartphone, Banknote } from 'lucide-react';
+import { Shield, ChevronRight, Zap, Target, Smartphone, Lock, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { MobileWrapper } from '@/components/shared/MobileWrapper';
 
-// --- Screen 0: Splash ---
-const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
-  useEffect(() => {
-    const timer = setTimeout(onFinish, 2800);
-    return () => clearTimeout(timer);
-  }, [onFinish]);
-
-  return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_#0A1628_0%,_#051020_100%)]">
-      {/* Rain Particles */}
-      {[...Array(40)].map((_, i) => (
-        <div
-          key={i}
-          className="rain-particle"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `-${Math.random() * 20}%`,
-            opacity: Math.random() * 0.5,
-            animationDelay: `${Math.random() * 2}s`,
-            animationDuration: `${1 + Math.random() * 1}s`,
-          }}
-        />
-      ))}
-
-      <motion.div
-        initial={{ scale: 0.7, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: 'spring', stiffness: 200, damping: 20, delay: 0.3 }}
-        className="relative mb-6"
-      >
-        <div className="absolute inset-0 blur-2xl bg-primary/20 rounded-full" />
-        <div className="relative w-20 h-20 bg-gradient-to-br from-primary to-[#FF8F5E] rounded-2xl flex items-center justify-center shadow-orange">
-          <Shield className="text-white w-10 h-10" />
-          <Zap className="absolute text-white w-5 h-5 bottom-4 right-4" />
-        </div>
-      </motion.div>
-
-      <motion.h1
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        className="text-display-xl text-white mb-2"
-      >
-        EARN SAGE
-      </motion.h1>
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-        className="text-text-muted font-dm-sans text-sm tracking-wide"
-      >
-        Earn Every Day. Protected Always.
-      </motion.p>
-
-      {/* Loading Bar */}
-      <div className="absolute bottom-20 w-48 h-[2px] bg-white/10 overflow-hidden rounded-full">
-        <motion.div
-          initial={{ width: 0 }}
-          animate={{ width: '100%' }}
-          transition={{ duration: 1.8, delay: 0.5, ease: 'easeInOut' }}
-          className="h-full bg-primary"
-        />
-      </div>
-    </div>
-  );
-};
-
-// --- Screen 1: Onboarding ---
-const onboardingSlides = [
+const slides = [
   {
-    id: 1,
-    number: "4.2",
-    unit: "disruption days per month",
-    headline: "Rain stops you. Income shouldn't.",
-    sub: "Every heavy rainfall, flood, or curfew costs you ₹500–₹1,200 in lost earnings.",
-    icon: CloudRain,
-    color: "primary"
+    type: 'dark',
+    hero: "4.2",
+    subHero: "disruption days per month",
+    title: "Rain stops you. Income shouldn't.",
+    body: "Every heavy rainfall costs you ₹500–₹1,200 in lost earnings. We fix that.",
+    icon: Shield,
   },
   {
-    id: 2,
-    icon: ShieldCheck,
-    headline: "Zero claims. Zero paperwork.",
-    sub: "Our AI watches weather, AQI and civic alerts in your zone 24/7.",
+    type: 'light',
+    title: "Zero claims. Zero paperwork.",
+    body: "Our AI detects disruptions automatically. If it rains, the money reaches you in hours.",
     steps: [
-      { id: "📡", label: "AI Detects" },
-      { id: "⚡", label: "Trigger Met" },
-      { id: "💸", label: "Auto Payout" },
+      { icon: Target, label: "AI Detects" },
+      { icon: Zap, label: "Trigger Met" },
+      { icon: Smartphone, label: "Payout Sent" }
     ]
   },
   {
-    id: 3,
-    icon: Banknote,
-    headline: "Less than ₹7/day for income protection.",
-    sub: "Auto-deducted weekly. Cancel anytime.",
-    stats: [
-      { val: "₹49 / week", label: "Premium" },
-      { val: "Up to ₹2,100", label: "Weekly Protection" },
-      { val: "10,000+", label: "Partners Protected" },
-    ]
+    type: 'value',
+    price: "₹49 / week",
+    payout: "Up to ₹2,100 protection",
+    subText: "Less than ₹7 a day.",
+    badges: ["Secure Payments", "Instant Payout", "100% Digital"]
   }
 ];
 
-export default function Home() {
+export default function Onboarding() {
   const [showSplash, setShowSplash] = useState(true);
   const [currentSlide, setCurrentSlide] = useState(0);
   const router = useRouter();
 
+  useEffect(() => {
+    const timer = setTimeout(() => setShowSplash(false), 2500);
+    return () => clearTimeout(timer);
+  }, []);
+
   if (showSplash) {
-    return <SplashScreen onFinish={() => setShowSplash(false)} />;
+    return (
+      <div className="fixed inset-0 z-50 bg-surface-base flex flex-col items-center justify-center overflow-hidden">
+        {/* Rain Particles */}
+        <div className="absolute inset-0 pointer-events-none opacity-20">
+          {[...Array(40)].map((_, i) => (
+            <motion.div
+              key={i}
+              initial={{ y: -20 }}
+              animate={{ y: 800 }}
+              transition={{ 
+                duration: 1.5 + Math.random(), 
+                repeat: Infinity, 
+                delay: Math.random() * 2,
+                ease: "linear" 
+              }}
+              className="absolute w-[1px] h-12 bg-ink-hint"
+              style={{ left: `${Math.random() * 100}%` }}
+            />
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ scale: 0.7, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.3 }}
+          className="relative mb-8"
+        >
+          <div className="w-20 h-20 rounded-[24px] bg-white border-2 border-ink-primary flex items-center justify-center p-4">
+             <Shield size={48} className="text-ink-primary stroke-[2.5px]" />
+             <Zap size={24} className="absolute text-primary fill-primary" />
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="text-center"
+        >
+          <h1 className="text-display-l tracking-[0.2em] uppercase mb-2">Earn Sage</h1>
+          <p className="text-caption">Earn Every Day. Protected Always.</p>
+        </motion.div>
+        
+        <div className="absolute bottom-12 left-12 right-12">
+          <div className="h-[2px] w-full bg-surface-sunken overflow-hidden rounded-full">
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: "100%" }}
+              transition={{ duration: 2.5, ease: "linear" }}
+              className="h-full bg-ink-primary"
+            />
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  return (
-    <div className="mobile-wrapper bg-secondary text-white font-dm-sans">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSlide}
-          initial={{ x: 300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: -300, opacity: 0 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-          className="flex-1 flex flex-col p-6 pt-12"
-        >
-          <div className="flex justify-end mb-8">
-            <button 
-              onClick={() => router.push('/register')}
-              className="text-text-muted text-sm hover:text-white transition-colors"
-            >
-              Skip
-            </button>
-          </div>
+  const slide = slides[currentSlide];
 
-          <div className="flex-1 flex flex-col justify-center">
-            {onboardingSlides[currentSlide].number ? (
-              <div className="mb-8">
-                <div className="text-[72px] font-space-mono text-primary leading-none mb-2">
-                  {onboardingSlides[currentSlide].number}
+  return (
+    <MobileWrapper className="bg-surface-base px-6 pt-12 pb-8 flex flex-col min-h-screen">
+      <div className="flex justify-end mb-8 text-caption font-bold" onClick={() => router.push('/dashboard')}>
+        SKIP
+      </div>
+
+      <div className="flex-1 flex flex-col">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.26 }}
+            className="flex-1 flex flex-col"
+          >
+            {slide.type === 'dark' ? (
+              <Card variant="dark" className="p-8 mb-8 flex-1 flex flex-col justify-center">
+                <div className="text-center mb-8">
+                  <div className="text-mono-xl text-primary text-[72px] leading-none mb-2">{slide.hero}</div>
+                  <div className="text-[13px] font-body text-white/60">{slide.subHero}</div>
                 </div>
-                <div className="text-text-muted uppercase tracking-[0.2em] font-space-mono text-sm">
-                  {onboardingSlides[currentSlide].unit}
-                </div>
+                <h2 className="text-display-l text-white mb-4">{slide.title}</h2>
+                <p className="text-body text-white/60 mb-8">{slide.body}</p>
+              </Card>
+            ) : slide.type === 'light' ? (
+              <div className="flex-1 flex flex-col">
+                <Card className="p-8 border-[#E2E8F0] mb-8 bg-white shadow-card flex-1 flex flex-col justify-center items-center text-center">
+                  <div className="flex items-center gap-4 mb-12">
+                    {slide.steps?.map((step, i) => (
+                      <React.Fragment key={i}>
+                        <div className="flex flex-col items-center gap-2">
+                          <div className="w-12 h-12 rounded-full bg-surface-raised border border-border-light flex items-center justify-center">
+                            <step.icon size={20} className="text-ink-primary" />
+                          </div>
+                          <span className="text-[12px] font-semibold">{step.label}</span>
+                        </div>
+                        {i < 2 && <div className="w-8 h-[1px] bg-surface-sunken mt-[-20px]" />}
+                      </React.Fragment>
+                    ))}
+                  </div>
+                  <h2 className="text-display-l mb-4">{slide.title}</h2>
+                  <p className="text-body text-ink-muted">{slide.body}</p>
+                </Card>
               </div>
             ) : (
-              <div className="mb-12 w-20 h-20 rounded-2xl bg-white/5 flex items-center justify-center">
-                {React.createElement(onboardingSlides[currentSlide].icon, {
-                  className: "text-primary w-10 h-10"
-                })}
-              </div>
-            )}
-
-            <h2 className="text-display-l mb-4 leading-tight">
-              {onboardingSlides[currentSlide].headline}
-            </h2>
-            <p className="text-text-muted text-base mb-12 max-w-[90%]">
-              {onboardingSlides[currentSlide].sub}
-            </p>
-
-            {onboardingSlides[currentSlide].steps && (
-              <div className="flex items-center justify-between mb-12 bg-white/5 p-6 rounded-2xl border border-white/10">
-                {onboardingSlides[currentSlide].steps.map((step, i) => (
-                  <React.Fragment key={step.label}>
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="text-2xl">{step.id}</div>
-                      <div className="text-[10px] uppercase font-bold text-text-muted">{step.label}</div>
+              <div className="flex-1 flex flex-col justify-center items-center text-center p-4">
+                <div className="text-mono-xl text-[44px] mb-2">{slide.price}</div>
+                <h2 className="text-display-l text-ink-secondary mb-2">{slide.payout}</h2>
+                <p className="text-body text-ink-muted mb-8">{slide.subText}</p>
+                <div className="space-y-3 w-full max-w-[280px]">
+                  {slide.badges?.map((badge, i) => (
+                    <div key={i} className="flex items-center gap-2 px-4 py-3 bg-surface-raised border border-border-light rounded-xl">
+                      <CheckCircle2 size={16} className="text-status-success" />
+                      <span className="text-xs font-semibold">{badge}</span>
                     </div>
-                    {i < 2 && <ArrowRight className="text-white/20 w-4 h-4" />}
-                  </React.Fragment>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
+          </motion.div>
+        </AnimatePresence>
 
-            {onboardingSlides[currentSlide].stats && (
-              <div className="space-y-4 mb-12">
-                {onboardingSlides[currentSlide].stats.map((stat) => (
-                  <div key={stat.label} className="bg-white/5 p-4 rounded-xl flex justify-between items-center">
-                    <span className="text-base font-semibold">{stat.val}</span>
-                    <span className="text-text-muted text-sm">{stat.label}</span>
-                  </div>
-                ))}
-              </div>
-            )}
+        <div className="mt-auto space-y-8">
+          <div className="flex justify-center gap-2">
+            {slides.map((_, i) => (
+              <div 
+                key={i} 
+                className={cn(
+                  "w-2 h-2 rounded-full transition-all duration-300",
+                  currentSlide === i ? "w-6 bg-ink-primary" : "bg-surface-sunken"
+                )} 
+              />
+            ))}
           </div>
 
-          <div className="mt-auto space-y-8">
-            <div className="flex justify-center gap-2">
-              {onboardingSlides.map((_, i) => (
-                <div 
-                  key={i}
-                  className={cn(
-                    "h-2 rounded-full transition-all duration-300",
-                    i === currentSlide ? "w-8 bg-primary" : "w-2 bg-white/20"
-                  )}
-                />
-              ))}
-            </div>
-
+          <div className="space-y-4 pb-4">
             <Button 
-              className="w-full" 
-              size="xl"
+              className="w-full text-sm tracking-wider uppercase"
               onClick={() => {
-                if (currentSlide < onboardingSlides.length - 1) {
-                  setCurrentSlide(prev => prev + 1);
+                if (currentSlide < slides.length - 1) {
+                  setCurrentSlide(currentSlide + 1);
                 } else {
                   router.push('/register');
                 }
               }}
             >
-              {currentSlide === onboardingSlides.length - 1 ? "Get Protected Now" : "Continue"}
-              <ArrowRight className="ml-2 w-5 h-5" />
+              {currentSlide === slides.length - 1 ? "Get Protected Now" : "Next Opportunity →"}
             </Button>
-
-            <div className="text-center">
-              <button 
-                onClick={() => router.push('/register')}
-                className="text-text-muted text-sm"
-              >
-                Already a partner? <span className="text-primary font-bold">Sign in</span>
-              </button>
-            </div>
+            <p className="text-center text-caption font-semibold">
+              Already a partner? <span className="text-ink-primary underline underline-offset-4">Sign in</span>
+            </p>
           </div>
-        </motion.div>
-      </AnimatePresence>
-    </div>
+        </div>
+      </div>
+    </MobileWrapper>
   );
 }

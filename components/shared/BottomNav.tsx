@@ -1,46 +1,58 @@
 "use client";
 
 import React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Home, Zap, Wallet, Shield, User } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Home, Map as MapIcon, Wallet, Shield, User } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { label: 'Home', icon: Home, href: '/dashboard' },
-  { label: 'Triggers', icon: Zap, href: '/triggers' },
-  { label: 'Payouts', icon: Wallet, href: '/payouts' },
-  { label: 'Plan', icon: Shield, href: '/plans' },
-  { label: 'Profile', icon: User, href: '/profile' },
+  { icon: Home, label: 'Home', path: '/dashboard' },
+  { icon: MapIcon, label: 'Triggers', path: '/triggers' },
+  { icon: Wallet, label: 'Payouts', path: '/payouts' },
+  { icon: Shield, label: 'Plan', path: '/plans/manage' },
+  { icon: User, label: 'Profile', path: '/profile' },
 ];
 
-export function BottomNav() {
+export const BottomNav = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] bg-secondary border-t border-white/10 px-4 pb-safe pt-2 z-50">
-      <div className="flex justify-between items-center px-2">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 flex justify-center pointer-events-none">
+      <div className="w-full max-w-[430px] h-[72px] bg-white border-t border-[#E2E8F0] shadow-[0_-4px_20px_rgba(15,23,42,0.06)] px-6 flex items-center justify-between pointer-events-auto pb-[env(safe-area-inset-bottom)]">
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          const Icon = item.icon;
-          
+          const isActive = pathname === item.path;
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex flex-col items-center justify-center py-2 px-1 gap-1 transition-colors touch-target min-w-[64px]",
-                isActive ? "text-primary" : "text-text-muted hover:text-white"
-              )}
+            <button
+              key={item.path}
+              onClick={() => router.push(item.path)}
+              className="relative flex flex-col items-center justify-center gap-1 group py-2"
             >
-              <Icon size={24} className={cn("transition-transform duration-300", isActive && "scale-110")} />
-              <span className="text-[10px] font-medium uppercase tracking-widest">
+              {isActive && (
+                <motion.div
+                  layoutId="activeIndicator"
+                  className="absolute -top-[22px] w-5 h-[3px] bg-primary rounded-full"
+                  transition={{ type: "spring", stiffness: 400, damping: 35 }}
+                />
+              )}
+              <item.icon 
+                size={22} 
+                className={cn(
+                  "transition-colors duration-200",
+                  isActive ? "text-primary fill-primary/10" : "text-ink-hint group-hover:text-ink-secondary"
+                )}
+              />
+              <span className={cn(
+                "text-[10px] font-body font-semibold tracking-wide transition-colors duration-200",
+                isActive ? "text-primary" : "text-ink-hint"
+              )}>
                 {item.label}
               </span>
-            </Link>
+            </button>
           );
         })}
       </div>
     </nav>
   );
-}
+};

@@ -1,164 +1,147 @@
 "use client";
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ArrowRight, ShieldCheck, CreditCard, Landmark, Smartphone, MoreHorizontal, Lock, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ChevronLeft, ShieldCheck, CreditCard, Smartphone, Banknote, Shield, ArrowRight, Lock, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { MobileWrapper } from '@/components/shared/MobileWrapper';
 
-const upiApps = [
-  { name: 'Google Pay', icon: 'GP' },
-  { name: 'PhonePe', icon: 'PP' },
-  { name: 'Paytm', icon: 'PT' },
-  { name: 'Other UPI', icon: 'ID' },
+const paymentMethods = [
+  { id: 'phonepe', name: 'PhonePe', icon: Smartphone },
+  { id: 'gpay', name: 'GPay', icon: Smartphone },
+  { id: 'paytm', name: 'Paytm', icon: Smartphone },
+  { id: 'upi', name: 'UPI ID', icon: Smartphone },
+  { id: 'netbanking', name: 'Net Banking', icon: Banknote },
+  { id: 'card', name: 'Debit Card', icon: CreditCard },
 ];
 
 export default function Payment() {
-  const [selectedMethod, setSelectedMethod] = useState('upi');
-  const [isLoading, setIsLoading] = useState(false);
+  const [selected, setSelected] = useState('phonepe');
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handlePay = () => {
-    setIsLoading(true);
+    setLoading(true);
     setTimeout(() => {
+      setLoading(false);
       router.push('/activation-success');
     }, 2000);
   };
 
   return (
-    <div className="mobile-wrapper bg-secondary text-white p-6 pb-24">
-      <header className="flex items-center justify-between mb-8 pt-6">
-        <button onClick={() => router.back()} className="touch-target -ml-4">
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <h1 className="text-heading">Payment</h1>
-        <div className="w-10" />
+    <MobileWrapper className="bg-surface-base flex flex-col min-h-screen">
+      <header className="px-6 pt-8 pb-4">
+        <div className="flex items-center gap-4 mb-6">
+          <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-surface-raised border border-border-light flex items-center justify-center text-ink-primary">
+            <ChevronLeft size={20} />
+          </button>
+          <h1 className="text-display-l">Activate Coverage</h1>
+        </div>
       </header>
 
-      {/* Order Summary */}
-      <Card variant="dark" className="bg-white/5 border-white/10 p-6 mb-10">
-        <div className="flex flex-col gap-4">
-          <div className="flex justify-between items-center">
-            <span className="text-text-muted text-sm">Standard Pro (Weekly)</span>
-            <span className="text-white font-bold">₹49.00</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="text-text-muted text-sm">Platform Fee</span>
-            <span className="text-white font-bold">₹2.00</span>
-          </div>
-          <div className="border-t border-white/5 pt-4 flex justify-between items-center">
-            <span className="text-lg font-bold">Total Payable</span>
-            <span className="text-2xl font-space-mono font-bold text-primary">₹51.00</span>
-          </div>
-        </div>
-      </Card>
-
-      {/* Payment Options */}
-      <section className="mb-10">
-        <label className="text-caption text-text-muted uppercase tracking-wider font-semibold mb-6 block">
-          Select Payment Method
-        </label>
-        
-        <div className="space-y-4">
-          {/* UPI Section */}
+      <main className="flex-1 px-6 pb-24 space-y-8">
+        {/* Order Summary */}
+        <Card className="bg-surface-raised border-[#E2E8F0] p-6 rounded-2xl">
+          <div className="text-[10px] font-bold tracking-widest text-ink-hint uppercase mb-6">Order Summary</div>
           <div className="space-y-4">
-            <div className="flex items-center gap-3 text-sm font-bold text-text-muted uppercase tracking-widest pl-2">
-              <Smartphone size={16} /> UPI Payments
+            <div className="flex justify-between items-center">
+              <span className="text-body text-ink-secondary">Plan Selection</span>
+              <span className="text-body font-bold text-ink-primary">Standard Shield</span>
             </div>
-            <div className="grid grid-cols-4 gap-3">
-              {upiApps.map(app => (
-                <button
-                  key={app.name}
-                  onClick={() => setSelectedMethod('upi-' + app.name)}
-                  className={cn(
-                    "flex flex-col items-center gap-2 p-3 rounded-xl border-1.5 transition-all",
-                    selectedMethod === 'upi-' + app.name ? "bg-primary/10 border-primary shadow-orange" : "bg-white/5 border-white/10"
-                  )}
-                >
-                  <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-xs font-bold text-white">
-                    {app.icon}
-                  </div>
-                  <span className="text-[9px] font-bold uppercase tracking-tighter text-text-muted truncate w-full text-center">{app.name}</span>
-                </button>
-              ))}
+            <div className="flex justify-between items-center">
+              <span className="text-body text-ink-secondary">Base Coverage</span>
+              <span className="text-body font-bold text-ink-primary">₹2,100 / week</span>
+            </div>
+            <div className="flex justify-between items-center text-caption">
+              <span>GST (18%)</span>
+              <span className="font-mono">₹8.82</span>
+            </div>
+            <div className="h-[1px] w-full bg-surface-sunken" />
+            <div className="flex justify-between items-center pt-2">
+              <span className="text-heading">Total Amount</span>
+              <span className="text-mono-xl text-2xl">₹57.82</span>
             </div>
           </div>
+        </Card>
 
-          {/* Other Methods */}
-          <div className="space-y-3 pt-6">
-            <div className="flex items-center gap-3 text-sm font-bold text-text-muted uppercase tracking-widest pl-2">
-              <MoreHorizontal size={16} /> Other Options
-            </div>
-            <button
-              onClick={() => setSelectedMethod('card')}
-              className={cn(
-                "w-full flex items-center justify-between p-5 rounded-xl border-1.5 transition-all text-left",
-                selectedMethod === 'card' ? "bg-primary/10 border-primary" : "bg-white/5 border-white/10"
-              )}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                  <CreditCard className="text-text-muted" size={20} />
-                </div>
-                <div>
-                  <div className="text-sm font-bold">Credit / Debit Card</div>
-                  <div className="text-[10px] text-text-muted uppercase tracking-widest font-bold">Visa, Mastercard, RuPay</div>
-                </div>
-              </div>
-              <div className={cn("w-5 h-5 rounded-full border-2", selectedMethod === 'card' ? "border-primary bg-primary" : "border-white/20")} />
-            </button>
-
-            <button
-              onClick={() => setSelectedMethod('netbanking')}
-              className={cn(
-                "w-full flex items-center justify-between p-5 rounded-xl border-1.5 transition-all text-left",
-                selectedMethod === 'netbanking' ? "bg-primary/10 border-primary" : "bg-white/5 border-white/10"
-              )}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center">
-                  <Landmark className="text-text-muted" size={20} />
-                </div>
-                <div>
-                  <div className="text-sm font-bold">Net Banking</div>
-                  <div className="text-[10px] text-text-muted uppercase tracking-widest font-bold">Select from top banks</div>
-                </div>
-              </div>
-              <div className={cn("w-5 h-5 rounded-full border-2", selectedMethod === 'netbanking' ? "border-primary bg-primary" : "border-white/20")} />
-            </button>
+        {/* Payment Grid */}
+        <section className="space-y-4">
+          <h3 className="text-heading">Select Payment Method</h3>
+          <div className="grid grid-cols-3 gap-3">
+            {paymentMethods.map(method => (
+              <button
+                key={method.id}
+                onClick={() => setSelected(method.id)}
+                className={cn(
+                  "p-4 rounded-xl border-1.5 transition-all text-center flex flex-col items-center gap-2",
+                  selected === method.id 
+                    ? "bg-surface-raised border-ink-primary" 
+                    : "bg-white border-border-light hover:border-border-mid"
+                )}
+              >
+                <method.icon size={20} className={selected === method.id ? "text-primary" : "text-ink-muted"} />
+                <span className={cn("text-[9px] font-bold uppercase tracking-widest", selected === method.id ? "text-ink-primary" : "text-ink-muted")}>
+                  {method.name}
+                </span>
+              </button>
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Security Footer */}
-      <div className="flex flex-col items-center gap-4 mb-10 py-6 border-y border-white/5">
-        <div className="flex items-center gap-2 text-safe">
-          <Lock size={14} />
-          <span className="text-[10px] font-bold uppercase tracking-widest">PCI-DSS Compliant Payments</span>
-        </div>
-        <div className="flex gap-4 opacity-40">
-          {/* Mock Security Logos */}
-          <div className="h-6 w-12 bg-white/20 rounded" />
-          <div className="h-6 w-12 bg-white/20 rounded" />
-          <div className="h-6 w-12 bg-white/20 rounded" />
-        </div>
-      </div>
+        {/* UPI Input (Mock) */}
+        <AnimatePresence>
+          {selected === 'upi' && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              className="space-y-3"
+            >
+              <input 
+                placeholder="Enter UPI ID (e.g. ravi@okaxis)"
+                className="w-full h-14 bg-white border-1.5 border-border-light rounded-xl px-4 text-ink-primary font-body text-base focus:outline-none focus:border-ink-primary transition-all"
+              />
+              <div className="flex items-center gap-2 px-2 text-status-success">
+                <CheckCircle2 size={14} />
+                <span className="text-[11px] font-bold uppercase tracking-wide">Priya Sharma · SBI</span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      <Button 
-        className="w-full h-16 text-lg font-bold group" 
-        size="xl" 
-        onClick={handlePay}
-        isLoading={isLoading}
-      >
-        <span>Securely Pay ₹51.00</span>
-        <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-      </Button>
+        {/* Auto Renewal Card */}
+        <div className="bg-status-info/5 border border-status-info/10 p-5 rounded-2xl flex gap-4">
+           <Shield className="text-status-info shrink-0" size={20} />
+           <div className="space-y-1">
+             <div className="text-xs font-bold text-ink-primary">Automatic Renewal Active</div>
+             <p className="text-[11px] text-ink-secondary leading-normal">
+               Your plan will auto-renew every Monday. You can cancel or pause anytime from "My Plan" settings.
+             </p>
+           </div>
+        </div>
 
-      <div className="text-center mt-6">
-        <p className="text-[11px] text-text-muted">By continuing, you agree to automate future weekly payments.</p>
-      </div>
-    </div>
+        {/* Trust Footer */}
+        <div className="flex flex-col items-center gap-4 py-4 text-center">
+           <div className="flex items-center gap-2 text-micro text-ink-hint">
+              <Lock size={12} /> 256-bit Secure Encryption
+           </div>
+           <p className="text-[9px] text-ink-hint uppercase font-bold tracking-[0.2em] px-12">
+             PCI DSS Compliant · Powered by Razorpay
+           </p>
+        </div>
+      </main>
+
+      <footer className="p-6 pb-12 fixed bottom-0 left-0 right-0 bg-surface-base/80 backdrop-blur-md">
+        <Button 
+          className="w-full h-14 uppercase tracking-widest shadow-cta group"
+          loading={loading}
+          onClick={handlePay}
+        >
+          Pay ₹57.82 & Activate <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+        </Button>
+      </footer>
+    </MobileWrapper>
   );
 }

@@ -2,204 +2,167 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Shield, CloudRain, Wind, AlertTriangle, ArrowRight, CheckCircle2, Info, TrendingDown } from 'lucide-react';
+import { ShieldCheck, CloudRain, Wind, AlertTriangle, ArrowRight, Info, Zap, ChevronRight, Loader2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { cn } from '@/lib/utils';
+import { MobileWrapper } from '@/components/shared/MobileWrapper';
 
-const analysisSteps = [
-  "Fetching Zonal Weather History...",
-  "Calculating AQI Volatility Index...",
-  "Detecting Monsoon Patterns...",
-  "Analyzing Payout Probability...",
-  "Finalizing Risk Score..."
+const loadingSteps = [
+  "Scanning your delivery zones...",
+  "Checking historical weather data...",
+  "Analyzing flood & AQI patterns...",
+  "Calculating disruption frequency...",
+  "Building your risk profile..."
 ];
 
-const riskData = [
-  { name: 'Risk', value: 72, color: '#FF6B2B' },
-  { name: 'Safe', value: 28, color: '#1E3A5F' },
-];
-
-export default function RiskProfile() {
-  const [loadingStep, setLoadingStep] = useState(0);
-  const [isAnalyzing, setIsAnalyzing] = useState(true);
+export default function RiskAnalysis() {
+  const [loading, setLoading] = useState(true);
+  const [stepIndex, setStepIndex] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
-    if (loadingStep < analysisSteps.length) {
-      const timer = setTimeout(() => setLoadingStep(prev => prev + 1), 1200);
-      return () => clearTimeout(timer);
-    } else {
-      setTimeout(() => setIsAnalyzing(false), 800);
+    if (loading) {
+      const stepTimer = setInterval(() => {
+        setStepIndex(prev => (prev < loadingSteps.length - 1 ? prev + 1 : prev));
+      }, 500);
+      const totalTimer = setTimeout(() => setLoading(false), 3000);
+      return () => {
+        clearInterval(stepTimer);
+        clearTimeout(totalTimer);
+      };
     }
-  }, [loadingStep]);
+  }, [loading]);
 
-  if (isAnalyzing) {
+  if (loading) {
     return (
-      <div className="mobile-wrapper bg-secondary flex flex-col items-center justify-center p-8 text-center">
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
-          className="w-48 h-48 border-2 border-primary/20 rounded-full flex items-center justify-center mb-12 relative"
-        >
-          <div className="absolute inset-0 bg-primary/5 rounded-full animate-pulse-subtle" />
-          <motion.div 
-            animate={{ scale: [1, 1.1, 1] }} 
-            transition={{ duration: 2, repeat: Infinity }}
-            className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center shadow-orange"
-          >
-            <Shield className="text-white w-8 h-8" />
-          </motion.div>
-        </motion.div>
-
-        <AnimatePresence mode="wait">
+      <MobileWrapper className="bg-surface-base flex flex-col items-center justify-center p-8">
+        <div className="relative mb-12">
           <motion.div
-            key={loadingStep}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="space-y-4"
-          >
-            <h2 className="text-display-l text-white">Analyzing Data...</h2>
-            <p className="text-text-muted font-space-mono text-sm uppercase tracking-widest min-h-[40px]">
-              {analysisSteps[loadingStep] || "Finalizing Results"}
-            </p>
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="mt-12 w-full max-w-[200px] h-1 bg-white/10 rounded-full overflow-hidden">
-          <motion.div 
-            animate={{ width: `${(loadingStep / analysisSteps.length) * 100}%` }}
-            className="h-full bg-primary shadow-orange"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 border-4 border-surface-sunken border-t-ink-primary rounded-full"
           />
         </div>
-      </div>
+        <div className="text-center space-y-2">
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={stepIndex}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="font-mono text-sm text-ink-primary"
+            >
+              {loadingSteps[stepIndex]}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      </MobileWrapper>
     );
   }
 
   return (
-    <div className="mobile-wrapper bg-secondary text-white p-6 pb-24 overflow-y-auto">
-      <header className="flex items-center justify-between mb-8 pt-6">
-        <h1 className="text-heading">AI Risk Analysis</h1>
-        <div className="bg-primary/20 text-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
-          Partner Registry: 4928-VX
-        </div>
+    <MobileWrapper className="bg-surface-base flex flex-col min-h-screen">
+      <header className="px-6 pt-12 pb-6 flex justify-between items-center">
+        <h1 className="text-display-l">Risk Profile</h1>
+        <div className="bg-ink-primary text-white text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-full">AI Analysis</div>
       </header>
 
-      {/* Progress */}
-      <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden mb-12">
-        <motion.div initial={{ width: '66%' }} animate={{ width: '100%' }} className="h-full bg-primary" />
-      </div>
-
-      {/* Risk Gauge */}
-      <section className="flex flex-col items-center mb-12">
-        <div className="w-64 h-64 relative">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={riskData}
-                cx="50%"
-                cy="50%"
-                innerRadius={80}
-                outerRadius={100}
-                startAngle={180}
-                endAngle={0}
-                paddingAngle={0}
-                dataKey="value"
-                stroke="none"
-              >
-                {riskData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-          <div className="absolute inset-0 flex flex-col items-center justify-center pt-8">
-            <span className="text-[54px] font-space-mono font-bold leading-none">72</span>
-            <span className="text-text-muted text-xs uppercase font-bold tracking-widest mt-1">Risk Score</span>
-            <div className="mt-4 bg-danger/20 text-danger border border-danger/30 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest group">
-              High Risk
+      <main className="flex-1 px-6 pb-24 space-y-6">
+        {/* Score Card */}
+        <Card className="p-8 border-border-light shadow-card rounded-[24px] text-center">
+          <div className="text-[10px] font-bold tracking-widest text-ink-muted uppercase mb-8">Your Risk Score</div>
+          
+          <div className="relative w-full max-w-[240px] mx-auto aspect-square flex items-center justify-center mb-8">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle
+                cx="50%" cy="50%" r="45%"
+                className="stroke-surface-sunken fill-none"
+                strokeWidth="10"
+              />
+              <motion.circle
+                cx="50%" cy="50%" r="45%"
+                className="stroke-status-warning fill-none"
+                strokeWidth="10"
+                strokeDasharray="283"
+                initial={{ strokeDashoffset: 283 }}
+                animate={{ strokeDashoffset: 283 - (283 * 0.64) }}
+                transition={{ duration: 1.5, ease: "easeOut" }}
+                strokeLinecap="round"
+              />
+            </svg>
+            <div className="absolute flex flex-col items-center">
+              <div className="text-mono-xl text-[52px]">64</div>
+              <div className="text-caption text-ink-hint">/ 100</div>
             </div>
           </div>
-        </div>
-      </section>
+          
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-status-warning/10 text-status-warning border border-status-warning/20 text-xs font-bold uppercase mb-2">
+            Moderate Risk
+          </div>
+          <div className="text-caption">Koramangala, Bengaluru</div>
+        </Card>
 
-      {/* Insight Card */}
-      <Card variant="gradient" className="mb-8 relative group overflow-hidden">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 rounded-full blur-3xl -mr-16 -mt-16" />
-        <div className="relative z-10 flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-            <TrendingDown className="text-primary w-6 h-6" />
-          </div>
-          <div>
-            <h4 className="text-lg font-bold mb-1">Impact Warning</h4>
-            <p className="text-sm text-text-muted leading-relaxed">
-              Based on your zone and hours, you are estimated to lose <span className="text-white font-bold">₹12,400</span> annually due to weather disruptions.
-            </p>
-          </div>
+        {/* Stats Grid */}
+        <div className="grid grid-cols-3 gap-3">
+          <Card className="p-4 bg-status-danger/5 border-status-danger/10 text-center">
+             <div className="text-status-danger font-mono text-base font-bold">HIGH</div>
+             <div className="text-[9px] font-bold uppercase tracking-wider">Rainfall</div>
+          </Card>
+          <Card className="p-4 bg-status-warning/5 border-status-warning/10 text-center">
+             <div className="text-status-warning font-mono text-base font-bold">MED</div>
+             <div className="text-[9px] font-bold uppercase tracking-wider">AQI</div>
+          </Card>
+          <Card className="p-4 bg-status-success/5 border-status-success/10 text-center">
+             <div className="text-status-success font-mono text-base font-bold">LOW</div>
+             <div className="text-[9px] font-bold uppercase tracking-wider">Civic</div>
+          </Card>
         </div>
-      </Card>
 
-      {/* Breakdown */}
-      <div className="grid grid-cols-3 gap-3 mb-12">
-        <div className="bg-white/5 p-4 rounded-xl border border-white/10 flex flex-col items-center gap-3">
-          <CloudRain className="text-primary w-6 h-6" />
-          <div className="text-center">
-            <div className="text-[10px] uppercase font-bold text-text-muted mb-1">Rain</div>
-            <div className="text-sm font-bold text-danger">High</div>
-          </div>
-        </div>
-        <div className="bg-white/5 p-4 rounded-xl border border-white/10 flex flex-col items-center gap-3">
-          <AlertTriangle className="text-warning w-6 h-6" />
-          <div className="text-center">
-            <div className="text-[10px] uppercase font-bold text-text-muted mb-1">Floods</div>
-            <div className="text-sm font-bold text-warning">Medium</div>
-          </div>
-        </div>
-        <div className="bg-white/5 p-4 rounded-xl border border-white/10 flex flex-col items-center gap-3">
-          <Wind className="text-accent w-6 h-6" />
-          <div className="text-center">
-            <div className="text-[10px] uppercase font-bold text-text-muted mb-1">AQI</div>
-            <div className="text-sm font-bold text-accent">Low</div>
-          </div>
-        </div>
-      </div>
+        {/* AI Insight */}
+        <Card className="bg-white border-border-light border-l-4 border-l-ink-primary p-6">
+           <div className="text-[10px] font-bold tracking-widest uppercase mb-2">AI Insight</div>
+           <p className="text-body text-ink-secondary leading-relaxed">
+             Rainfall in your zone is 22% higher than the city average. We recommend active protection for at least 3 weeks each month.
+           </p>
+        </Card>
 
-      {/* Plan Recommendation */}
-      <label className="text-caption text-text-muted uppercase tracking-wider font-semibold mb-4 block">
-        Recommended Protection
-      </label>
-      <Card variant="dark" className="bg-primary/5 border-primary/20 mb-12 p-6">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <div className="text-xs text-primary font-bold uppercase tracking-widest mb-1">Standard Plan</div>
-            <h3 className="text-xl font-bold">Best Value for You</h3>
+        {/* Recommendation Card */}
+        <Card variant="dark" className="p-6 relative overflow-hidden group">
+          <div className="flex justify-between items-start mb-6">
+            <div>
+              <h3 className="text-display-l text-white text-lg">Standard Shield</h3>
+              <p className="text-white/50 text-[11px]">Recommended for your zone</p>
+            </div>
+            <div className="text-right">
+              <div className="text-mono-xl text-white text-2xl">₹49</div>
+              <div className="text-white/50 text-[11px]">/ week</div>
+            </div>
           </div>
-          <CheckCircle2 className="text-primary w-6 h-6" />
+          
+          <div className="flex gap-2 flex-wrap mb-8">
+            {['Rain', 'Flood', 'AQI', 'Curfew'].map(t => (
+              <div key={t} className="px-3 py-1 rounded-full bg-white/10 text-white text-[10px] font-bold uppercase tracking-widest">
+                {t}
+              </div>
+            ))}
+          </div>
+          
+          <Button variant="primary" className="w-full bg-[#FF6B2B] hover:bg-[#E8571A]" onClick={() => router.push('/plans')}>
+            Activate This Plan
+          </Button>
+          
+          {/* Background Decor */}
+          <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl opacity-50 group-hover:scale-125 transition-transform duration-500" />
+        </Card>
+
+        <div className="text-center">
+           <Button variant="ghost" className="text-ink-muted h-auto py-2" onClick={() => router.push('/plans')}>
+             See All Plans <ChevronRight size={16} className="ml-1" />
+           </Button>
         </div>
-        <ul className="space-y-3 mb-6">
-          <li className="flex items-center gap-3 text-sm text-text-secondary">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-            Covers Moderate to Heavy Rainfall
-          </li>
-          <li className="flex items-center gap-3 text-sm text-text-secondary">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-            Payout up to ₹800 per session
-          </li>
-          <li className="flex items-center gap-3 text-sm text-text-secondary">
-            <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-            Daily AI Monitoring & Alerts
-          </li>
-        </ul>
-        <Button className="w-full" size="xl" onClick={() => router.push('/plans')}>
-          View All Plans <ArrowRight className="ml-2 w-5 h-5" />
-        </Button>
-      </Card>
-      
-      <div className="text-center">
-        <p className="text-xs text-text-muted">Not satisfied with your score? <span className="underline">Recalculate.</span></p>
-      </div>
-    </div>
+      </main>
+    </MobileWrapper>
   );
 }
