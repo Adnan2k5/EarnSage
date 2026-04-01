@@ -107,7 +107,7 @@ export default function PayoutDetail() {
         </section>
 
         {/* Map Snapshot */}
-        <section className="space-y-4 pb-12">
+        <section className="space-y-4 pb-0">
            <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted px-2">Event Evidence</h3>
            <div className="relative aspect-video rounded-3xl overflow-hidden border border-border-light shadow-md bg-[#F1F3F4] group">
               <div className="absolute inset-0 bg-[url('https://api.mapbox.com/styles/v1/mapbox/light-v11/static/77.6412,12.9716,13/400x200?access_token=pk.mock')] bg-cover opacity-80" />
@@ -117,7 +117,36 @@ export default function PayoutDetail() {
                  <span className="text-[9px] font-bold uppercase tracking-widest text-ink-primary">Koramangala Trigger Zone</span>
               </div>
            </div>
-           
+        </section>
+
+        {/* Coverage Exclusions Section */}
+        <section className="space-y-4">
+           <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted px-2">Coverage Exclusions</h3>
+           <Card className="p-5 bg-surface-raised border-border-light space-y-3">
+              <div className="text-[10px] text-ink-muted leading-relaxed">
+                 Earn Sage income protection does NOT cover income loss due to:
+              </div>
+              <ul className="space-y-2">
+                 {[
+                    "Personal illness, injury, or medical emergency",
+                    "Vehicle breakdown or mechanical failure",
+                    "Rainfall < minimum threshold (50mm/hr)",
+                    "GPS location inconsistent with declared zone"
+                 ].map((exc, i) => (
+                    <li key={i} className="flex items-start gap-2 text-[10px] text-ink-secondary">
+                       <div className="w-1 h-1 rounded-full bg-ink-hint mt-1.5 shrink-0" />
+                       <span>{exc}</span>
+                    </li>
+                 ))}
+              </ul>
+              <div className="pt-2 border-t border-border-light flex justify-between items-center text-[10px]">
+                 <span className="text-ink-muted italic">Annual Aggregate Cap</span>
+                 <span className="font-bold text-ink-primary">₹25,200</span>
+              </div>
+           </Card>
+        </section>
+
+        <section className="space-y-4 pb-12">
            <div className="flex gap-3">
               <Button variant="ghost" className="flex-1 h-12 uppercase tracking-[0.2em] text-[10px]">
                  <Download size={16} className="mr-2" /> Receipt

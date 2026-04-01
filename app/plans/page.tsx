@@ -134,7 +134,34 @@ export default function PlanSelection() {
         ))}
       </div>
 
-      <div className="mt-12 space-y-4 pt-8 border-t border-surface-sunken">
+      <div className="mt-12 space-y-6 pt-8 border-t border-surface-sunken">
+        {/* Financial Transparency */}
+        <Card className="p-6 bg-surface-raised border-border-light">
+          <h4 className="text-[10px] font-bold tracking-widest uppercase mb-4 text-ink-primary">Financial Transparency</h4>
+          <p className="text-[11px] text-ink-muted mb-6 leading-relaxed">
+            Every ₹100 in premiums is distributed to ensure a sustainable safety net for all riders.
+          </p>
+          <div className="space-y-4">
+            {[
+              { label: "Payout Pool", value: 65, color: "bg-status-success", desc: "Reserved for rider claims" },
+              { label: "Operations", value: 20, color: "bg-ink-primary", desc: "Tech & 24/7 support" },
+              { label: "Reinsurance", value: 10, color: "bg-primary", desc: "Catastrophic coverage" },
+              { label: "Platform", value: 5, color: "bg-surface-sunken", desc: "Profit margin" }
+            ].map((item, i) => (
+              <div key={i} className="space-y-1.5">
+                <div className="flex justify-between items-end">
+                  <div className="text-[10px] font-bold uppercase tracking-wider">{item.label}</div>
+                  <div className="text-mono-xl text-base">₹{item.value}</div>
+                </div>
+                <div className="h-1.5 w-full bg-surface-base rounded-full overflow-hidden">
+                  <div className={cn("h-full rounded-full", item.color)} style={{ width: `${item.value}%` }} />
+                </div>
+                <div className="text-[9px] text-ink-hint italic">{item.desc}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
         <div className="flex justify-between gap-4">
            {[
              { icon: Shield, label: "IRDAI Regulated" },

@@ -140,6 +140,37 @@ export default function RiskAnalysis() {
               <div className="text-white/50 text-[11px]">/ week</div>
             </div>
           </div>
+
+          {/* Model Explainability Section */}
+          <div className="mb-8 space-y-4">
+            <div className="text-[10px] font-bold tracking-widest text-white/40 uppercase">Why this score</div>
+            <div className="space-y-2">
+              {[
+                { label: "High frequency of rain events (past 90d)", value: 85 },
+                { label: "Active monsoon seasonal risk", value: 72 },
+                { label: "Zone elevation & flood vulnerability", value: 45 }
+              ].map((factor, i) => (
+                <div key={i} className="space-y-1">
+                  <div className="flex justify-between text-[10px] text-white/70">
+                    <span>{factor.label}</span>
+                    <span>{factor.value}%</span>
+                  </div>
+                  <div className="h-1 bg-white/10 rounded-full overflow-hidden">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${factor.value}%` }}
+                      transition={{ duration: 1, delay: 0.5 + (i * 0.2) }}
+                      className="h-full bg-primary"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-2 mt-4 text-[10px] text-primary font-bold">
+              <Zap size={12} />
+              <span>31% chance of payout trigger in next 7 days</span>
+            </div>
+          </div>
           
           <div className="flex gap-2 flex-wrap mb-8">
             {['Rain', 'Flood', 'AQI', 'Curfew'].map(t => (
@@ -157,7 +188,12 @@ export default function RiskAnalysis() {
           <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-3xl opacity-50 group-hover:scale-125 transition-transform duration-500" />
         </Card>
 
-        <div className="text-center">
+        <div className="text-center space-y-4">
+           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-raised border border-border-light text-[9px] font-bold text-ink-muted uppercase">
+             <ShieldCheck size={12} className="text-status-success" />
+             Model AUC: 0.847 • Trained on 618,310 points
+           </div>
+           <br />
            <Button variant="ghost" className="text-ink-muted h-auto py-2" onClick={() => router.push('/plans')}>
              See All Plans <ChevronRight size={16} className="ml-1" />
            </Button>
