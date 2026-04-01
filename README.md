@@ -15,6 +15,17 @@ Earn Sage is a high-fidelity, parametric insurance platform designed specificall
 
 ---
 
+## 🚀 NEW IN V4.0 (Winning Project Scope)
+
+| Feature | Technical Implementation | Value Proposition |
+| :--- | :--- | :--- |
+| **Institutional Transparency** | Reinsurance Dashboard (Solvency II, Loss Ratios, XOL Treaty) | Prove fiscal stability to backers. |
+| **Predictive ML** | Payout Forecast Window (7-day probability modeling) | Moving from reactive to proactive security. |
+| **Personalized Pricing** | Policy Customizer (Dynamic risk-based premium engine) | Market-adaptive premiums. |
+| **Rider Safe Mode** | Hands-free Voice UI + One-tap Sensor HUD | Physical and financial safety combined. |
+
+---
+
 ## Application Workflow
 Our platform operates on a zero touch, highly automated lifecycle designed specifically for the fast paced nature of gig work.
 

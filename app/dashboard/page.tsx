@@ -319,6 +319,17 @@ export default function Dashboard() {
             <ArrowUpRight size={16} className="text-ink-hint group-hover:text-primary transition-colors" />
          </button>
       </div>
+
+      {/* Floating Safe Mode Button */}
+      <motion.button
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => router.push('/rider-safe-mode')}
+        className="fixed bottom-24 right-6 w-14 h-14 bg-ink-primary text-white rounded-full shadow-2xl flex items-center justify-center z-50 border-2 border-white/20"
+      >
+        <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+        <Shield size={24} className="relative z-10" />
+      </motion.button>
     </MobileWrapper>
   );
 }
