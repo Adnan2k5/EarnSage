@@ -255,6 +255,38 @@ export default function Dashboard() {
           </div>
         </section>
 
+        {/* Protection ROI */}
+        <Card 
+           variant="dark" 
+           className="p-8 bg-[#FF6B2B] text-white border-none shadow-[0_20px_40px_rgba(255,107,43,0.3)] relative overflow-hidden group"
+         >
+            <div className="relative z-10 space-y-6">
+               <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-xl">
+                     <Sparkles size={20} className="text-white" />
+                  </div>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/60">Protection Benefit</div>
+               </div>
+               
+               <div>
+                  <h3 className="text-display-m text-3xl mb-2">5.06x ROI</h3>
+                  <p className="text-[11px] text-white/70 max-w-[200px] leading-relaxed">
+                    You've protected **₹5,950** in earnings this quarter. View your full efficiency report.
+                  </p>
+               </div>
+
+               <Button 
+                onClick={() => router.push('/stats')}
+                className="bg-white text-[#FF6B2B] h-12 px-6 text-[10px] uppercase font-bold tracking-widest border-none hover:bg-white/90 shadow-xl"
+               >
+                  View Stats
+               </Button>
+            </div>
+            {/* Abstract Shield Pattern */}
+            <div className="absolute right-[-20px] top-[-20px] w-48 h-48 bg-white opacity-5 rounded-full" />
+            <div className="absolute right-[20px] bottom-[-20px] w-32 h-32 bg-white opacity-10 rounded-full" />
+         </Card>
+
         {/* Referral Card */}
         <Card className="p-6 bg-gradient-to-br from-[#FF6B2B] to-[#E8571A] text-white border-none relative overflow-hidden group">
            <div className="relative z-10">

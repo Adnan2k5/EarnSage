@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, Settings, CreditCard, Shield, HelpCircle, LogOut, User, Share2, Award, Wallet, Info, ArrowUpRight, Copy } from 'lucide-react';
+import { ChevronRight, Settings, CreditCard, Shield, HelpCircle, LogOut, User, Share2, Award, Wallet, Info, ArrowUpRight, Copy, Languages, Bell } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -76,6 +76,35 @@ export default function PartnerProfile() {
         </section>
 
         {/* Section Groups */}
+        <section className="space-y-2">
+          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest px-2 mb-2">Preferences</h3>
+          <div className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm">
+            {[
+              { icon: Languages, label: 'App Language', sub: 'English (US)', action: 'lang' },
+              { icon: Bell, label: 'Notifications', sub: 'Push, WhatsApp', action: 'notif' },
+            ].map((item, i) => (
+              <button 
+                key={i} 
+                className={cn(
+                  "w-full flex items-center justify-between p-5 hover:bg-slate-50 transition-colors",
+                  i !== 1 && "border-b border-slate-50"
+                )}
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400">
+                    <item.icon size={20} />
+                  </div>
+                  <div className="text-left">
+                    <div className="text-sm font-bold text-slate-800">{item.label}</div>
+                    <div className="text-[10px] text-slate-400 font-medium uppercase tracking-widest">{item.sub}</div>
+                  </div>
+                </div>
+                <ChevronRight size={18} className="text-slate-300" />
+              </button>
+            ))}
+          </div>
+        </section>
+
         <section className="space-y-6">
            <div className="space-y-3">
               <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted px-1">Account Settings</h3>

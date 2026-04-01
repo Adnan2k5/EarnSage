@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Shield, BarChart3, LineChart, PieChart, Info, ChevronLeft, ArrowUpRight, Landmark, FileText, Activity } from 'lucide-react';
+import { Shield, BarChart3, LineChart, PieChart, Info, ChevronLeft, ArrowUpRight, Landmark, FileText, Activity, Database } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -81,6 +81,32 @@ export default function ReinsuranceDashboard() {
         </div>
 
         {/* Loss Ratio Chart */}
+        <section className="space-y-4">
+           <div className="flex justify-between items-center px-1">
+              <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted">Partner Connectivity</h3>
+              <div 
+                onClick={() => router.push('/partners/guidewire')}
+                className="text-[9px] text-primary font-bold uppercase tracking-widest cursor-pointer hover:underline"
+              >
+                View GW Status
+              </div>
+           </div>
+           <Card className="p-4 bg-slate-50 border-slate-200 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                 <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-white">
+                    <Database size={16} />
+                 </div>
+                 <div>
+                    <div className="text-[9px] font-bold text-slate-800 uppercase tracking-widest">Guidewire Cloud</div>
+                    <div className="text-[8px] text-emerald-600 font-bold uppercase tracking-widest flex items-center gap-1">
+                       <Activity size={8} /> Synchronized
+                    </div>
+                 </div>
+              </div>
+              <ArrowUpRight size={14} className="text-slate-400" />
+           </Card>
+        </section>
+
         <section className="space-y-4">
            <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted px-1">Performance Trend</h3>
            <Card className="p-6 h-64 border-border-light shadow-sm">
