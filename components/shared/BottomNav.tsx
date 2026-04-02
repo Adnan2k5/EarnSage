@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Home, Map as MapIcon, Wallet, Shield, User } from 'lucide-react';
+import { Home, Map as MapIcon, Wallet, Shield, User, HelpCircle } from 'lucide-react';
 import { usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
@@ -11,6 +11,7 @@ const navItems = [
   { icon: MapIcon, label: 'Triggers', path: '/triggers' },
   { icon: Wallet, label: 'Payouts', path: '/payouts' },
   { icon: Shield, label: 'Plan', path: '/plans/manage' },
+  { icon: HelpCircle, label: 'Support', path: '/support' },
   { icon: User, label: 'Profile', path: '/profile' },
 ];
 

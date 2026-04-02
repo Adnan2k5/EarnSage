@@ -60,8 +60,8 @@ export default function RootLayout({
               {children}
             </PageTransition>
             {/* BottomNav is handled inside individual page layouts or via a client component check */}
+            <ChatBot />
           </MobileWrapper>
-          <ChatBot />
         </AppProvider>
         <Analytics />
       </body>

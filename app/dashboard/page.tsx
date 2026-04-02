@@ -50,12 +50,20 @@ export default function Dashboard() {
             <div className="text-heading">Hey, Ravi</div>
           </div>
         </div>
-        <button className="relative w-11 h-11 rounded-full bg-surface-raised border border-border-light flex items-center justify-center group">
-          <Bell className="w-5 h-5 text-ink-primary group-hover:scale-110 transition-transform" />
-          <div className="absolute top-2.5 right-2.5 w-4 h-4 bg-status-danger rounded-full border-2 border-white flex items-center justify-center text-[8px] font-mono font-bold text-white">
-            2
-          </div>
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => router.push('/support')}
+            className="w-11 h-11 rounded-full bg-surface-raised border border-border-light flex items-center justify-center group"
+          >
+            <HelpCircle className="w-5 h-5 text-ink-primary group-hover:scale-110 transition-transform" />
+          </button>
+          <button className="relative w-11 h-11 rounded-full bg-surface-raised border border-border-light flex items-center justify-center group">
+            <Bell className="w-5 h-5 text-ink-primary group-hover:scale-110 transition-transform" />
+            <div className="absolute top-2.5 right-2.5 w-4 h-4 bg-status-danger rounded-full border-2 border-white flex items-center justify-center text-[8px] font-mono font-bold text-white">
+              2
+            </div>
+          </button>
+        </div>
       </header>
 
       <div className="space-y-6">
