@@ -134,8 +134,11 @@ export default function Dashboard() {
 
           <div className="flex justify-between items-center">
             <div className="text-[10px] text-white/40 font-mono">RENEWS MAR 25 · ₹49</div>
-            <button className="text-primary text-[11px] font-bold uppercase tracking-widest flex items-center gap-1">
-              Manage <ChevronRight size={14} />
+            <button 
+              onClick={() => router.push('/customize')}
+              className="text-primary text-[11px] font-bold uppercase tracking-widest flex items-center gap-1 hover:underline"
+            >
+              Customize Armor <ChevronRight size={14} />
             </button>
           </div>
           

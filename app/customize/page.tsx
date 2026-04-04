@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Shield, Zap, Wind, CloudRain, Info, ArrowRight, Settings2, Sliders, CheckCircle2 } from 'lucide-react';
+import { ChevronLeft, Shield, Zap, Target, ArrowRight, Info, CheckCircle2, Sparkles, HelpCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -11,181 +11,163 @@ import { cn } from '@/lib/utils';
 
 export default function PolicyCustomizer() {
   const router = useRouter();
-  const [basePremium, setBasePremium] = useState(49);
-  const [riskAppetite, setRiskAppetite] = useState(2); // 1: Conservative, 2: Standard, 3: Aggressive
-  const [selectedZones, setSelectedZones] = useState(['Central', 'East']);
-  const [payoutMultiplier, setPayoutMultiplier] = useState(1.0);
-  const [calculatedPremium, setCalculatedPremium] = useState(49);
+  const [coverage, setCoverage] = useState(1500);
+  const [sensitivity, setSensitivity] = useState(50); // 0: Robust, 100: Sensitive
+  const [premium, setPremium] = useState(49);
 
-  const zones = [
-    { id: 'Central', risk: 1.2, name: 'Central Bengaluru' },
-    { id: 'East', risk: 1.0, name: 'East / IT Corridors' },
-    { id: 'South', risk: 0.8, name: 'South Bengaluru' },
-    { id: 'West', risk: 1.1, name: 'West / Industrial' },
-  ];
-
+  // Live Pricing Logic
   useEffect(() => {
-    let premium = basePremium;
-    
-    // Zone Multiplier
-    const zoneMult = selectedZones.reduce((acc, zoneId) => {
-      const zone = zones.find(z => z.id === zoneId);
-      return acc + (zone ? zone.risk : 1);
-    }, 0) / (selectedZones.length || 1);
-
-    // Risk Appetite Multiplier
-    const appetitMult = riskAppetite === 1 ? 0.8 : riskAppetite === 3 ? 1.4 : 1.0;
-
-    // Payout Multiplier
-    const payoutMult = payoutMultiplier;
-
-    const final = basePremium * zoneMult * appetitMult * payoutMult;
-    setCalculatedPremium(Math.round(final));
-  }, [riskAppetite, selectedZones, payoutMultiplier, basePremium]);
-
-  const toggleZone = (id: string) => {
-    if (selectedZones.includes(id)) {
-      setSelectedZones(selectedZones.filter(z => z !== id));
-    } else {
-      setSelectedZones([...selectedZones, id]);
-    }
-  };
+    const base = 49;
+    const coverageCost = (coverage - 500) / 10; // ₹0.1 per ₹1 extra coverage
+    const sensitivityCost = (sensitivity / 10) * 2; // ₹2 per 10% sensitivity increase
+    setPremium(Math.round(base + coverageCost + sensitivityCost));
+  }, [coverage, sensitivity]);
 
   return (
-    <MobileWrapper className="bg-surface-base flex flex-col min-h-screen">
-      <header className="px-6 pt-8 pb-4">
-        <div className="flex items-center gap-4 mb-6">
-          <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-surface-raised border border-border-light flex items-center justify-center text-ink-primary">
-            <ChevronLeft size={20} />
-          </button>
-          <h1 className="text-display-l">Customize</h1>
+    <MobileWrapper className="bg-surface-base px-6 pt-8 pb-40 min-h-screen">
+      <header className="flex items-center gap-4 mb-8">
+        <button onClick={() => router.back()} className="w-10 h-10 rounded-full bg-surface-raised border border-border-light flex items-center justify-center text-ink-primary">
+          <ChevronLeft size={20} />
+        </button>
+        <div>
+          <h1 className="text-display-l">Custom Armor</h1>
+          <div className="text-[10px] font-bold text-ink-hint uppercase tracking-widest italic flex items-center gap-2">
+            <Sparkles size={10} className="text-primary" /> Personalized Protection
+          </div>
         </div>
-        <p className="text-body text-ink-muted">Fine-tune your protection based on your daily routes.</p>
       </header>
 
-      <main className="flex-1 px-6 pt-8 space-y-10 pb-32">
-        {/* Price Sticky Header Simulation */}
-        <div className="sticky top-4 z-40 bg-ink-primary text-white p-6 rounded-[24px] shadow-2xl flex justify-between items-center overflow-hidden">
-           <div>
-              <div className="text-[9px] font-bold text-white/50 uppercase tracking-widest mb-1">Weekly Premium</div>
+      <main className="space-y-8">
+        {/* Live Pricing Display */}
+        <Card className="p-8 bg-slate-900 text-white border-none relative overflow-hidden shadow-2xl">
+           <div className="relative z-10 flex flex-col items-center text-center space-y-2">
+              <div className="text-[10px] font-bold text-white/40 uppercase tracking-[0.3em]">Estimated Premium</div>
               <motion.div 
-                key={calculatedPremium}
-                initial={{ y: 10, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                className="text-mono-xl text-3xl"
+                key={premium}
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                className="text-mono-xl text-5xl flex items-baseline gap-1"
               >
-                ₹{calculatedPremium}
+                 <span className="text-2xl font-normal text-primary">₹</span>
+                 {premium}
+                 <span className="text-sm font-normal text-white/40 font-sans uppercase">/Week</span>
               </motion.div>
-           </div>
-           <Button className="bg-primary text-white border-none h-11 px-6 text-[10px] uppercase font-bold tracking-widest hover:bg-primary/90">
-              Apply Plan
-           </Button>
-           <Shield className="absolute right-[-10px] top-[-10px] w-20 h-20 text-white/5 -rotate-12" />
-        </div>
-
-        {/* Risk Appetite */}
-        <section className="space-y-4">
-           <div className="flex justify-between items-end">
-              <label className="text-heading text-sm">Risk Appetite</label>
-              <div className="text-[10px] font-bold text-primary uppercase tracking-widest">
-                 {riskAppetite === 1 ? 'Conservative' : riskAppetite === 2 ? 'Standard' : 'Aggressive'}
+              <div className="px-3 py-1 bg-primary/20 text-primary border border-primary/30 rounded-full text-[8px] font-bold uppercase tracking-widest mt-2">
+                 Best Value Plan
               </div>
            </div>
-           <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3].map((val) => (
-                <button
-                  key={val}
-                  onClick={() => setRiskAppetite(val)}
-                  className={cn(
-                    "h-12 rounded-xl text-[10px] font-bold uppercase transition-all border-2",
-                    riskAppetite === val ? "bg-ink-primary border-ink-primary text-white" : "bg-white border-border-light text-ink-muted"
-                  )}
-                >
-                  {val === 1 ? 'Eco' : val === 2 ? 'Pro' : 'Elite'}
-                </button>
-              ))}
+           
+           {/* Animated Background Atoms */}
+           <motion.div 
+             animate={{ rotate: 360 }}
+             transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
+             className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-20"
+           >
+              <div className="w-[300px] h-[300px] border border-white/5 rounded-full" />
+              <div className="w-[350px] h-[350px] border border-white/5 rounded-full absolute" />
+           </motion.div>
+        </Card>
+
+        {/* Customization Sliders */}
+        <section className="space-y-8 py-4">
+           {/* Coverage Slider */}
+           <div className="space-y-4">
+              <div className="flex justify-between items-end px-1">
+                 <div className="space-y-1">
+                    <h3 className="text-[11px] font-bold uppercase tracking-widest text-ink-primary flex items-center gap-2">
+                       <Shield size={14} className="text-primary" /> Coverage Cap
+                    </h3>
+                    <p className="text-[9px] text-ink-hint max-w-[180px]">The maximum payout amount for a single trigger event.</p>
+                 </div>
+                 <div className="text-right">
+                    <div className="text-mono-l text-lg text-ink-primary">₹{coverage}</div>
+                 </div>
+              </div>
+              <input 
+                type="range" min="500" max="5000" step="100" value={coverage} 
+                onChange={(e) => setCoverage(parseInt(e.target.value))}
+                className="w-full h-2 bg-surface-sunken rounded-full appearance-none accent-[#FF6B2B] cursor-pointer"
+              />
+              <div className="flex justify-between text-[8px] font-bold text-ink-hint uppercase tracking-widest">
+                 <span>₹500</span>
+                 <span>₹5000</span>
+              </div>
            </div>
-           <p className="text-[10px] text-ink-hint italic">
-              {riskAppetite === 3 ? "Elite mode covers minor drizzles and heatwaves (+₹12)" : "Standard mode covers medium to heavy disruptions."}
-           </p>
+
+           {/* Risk Sensitivity Slider */}
+           <div className="space-y-4">
+              <div className="flex justify-between items-end px-1">
+                 <div className="space-y-1">
+                    <h3 className="text-[11px] font-bold uppercase tracking-widest text-ink-primary flex items-center gap-2">
+                       <Target size={14} className="text-primary" /> Risk Sensitivity
+                    </h3>
+                    <p className="text-[9px] text-ink-hint max-w-[180px]">How sensitive the trigger is to light rainfall fluctuations.</p>
+                 </div>
+                 <div className="text-right">
+                    <div className="text-[10px] font-bold text-primary uppercase tracking-widest">
+                       {sensitivity < 30 ? "Robust" : sensitivity < 70 ? "Balanced" : "Ultra-Sensitive"}
+                    </div>
+                 </div>
+              </div>
+              <div className="relative flex items-center h-2">
+                <input 
+                  type="range" min="0" max="100" step="1" value={sensitivity} 
+                  onChange={(e) => setSensitivity(parseInt(e.target.value))}
+                  className="w-full h-2 bg-surface-sunken rounded-full appearance-none accent-[#FF6B2B] cursor-pointer relative z-10"
+                />
+                <div className="absolute inset-0 flex justify-between px-1 pointer-events-none">
+                   {[0, 25, 50, 75, 100].map(v => <div key={v} className="w-0.5 h-1.5 bg-border-mid/50 rounded-full" />)}
+                </div>
+              </div>
+              <div className="flex justify-between text-[8px] font-bold text-ink-hint uppercase tracking-widest">
+                 <span>Min</span>
+                 <span>Max</span>
+              </div>
+           </div>
         </section>
 
-        {/* Zone Selector */}
+        {/* Features Preview */}
         <section className="space-y-4">
-           <label className="text-heading text-sm">Working Zones</label>
-           <div className="space-y-2">
-              {zones.map((zone) => (
-                <Card 
-                  key={zone.id} 
-                  onClick={() => toggleZone(zone.id)}
-                  className={cn(
-                    "p-4 flex justify-between items-center cursor-pointer transition-all",
-                    selectedZones.includes(zone.id) ? "border-primary bg-primary/5" : "border-border-light"
-                  )}
-                >
-                   <div className="flex items-center gap-3">
-                      <div className={cn(
-                        "w-5 h-5 rounded border flex items-center justify-center transition-colors",
-                        selectedZones.includes(zone.id) ? "bg-primary border-primary" : "border-border-mid"
-                      )}>
-                         {selectedZones.includes(zone.id) && <CheckCircle2 className="text-white" size={14} />}
-                      </div>
-                      <div className="text-xs font-bold text-ink-primary">{zone.name}</div>
+           <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-ink-muted px-1">Included Benefits</h3>
+           <div className="grid grid-cols-1 gap-3">
+              {[
+                { title: "Parametric Instant Pay", icon: Zap, detail: "Blockchain verified within 12 seconds" },
+                { title: "Oracle Verification", icon: CheckCircle2, detail: "Dual-mesh IoT sensor validation" },
+                { title: "Rider Safe Mode", icon: Shield, detail: "Autonomous voice alerts included" }
+              ].map((benefit, i) => (
+                <Card key={i} className="p-4 border-border-light bg-white flex items-center gap-4 group hover:border-primary/40 transition-all">
+                   <div className="w-10 h-10 rounded-2xl bg-surface-raised border border-border-light flex items-center justify-center text-ink-muted group-hover:text-primary transition-colors">
+                      <benefit.icon size={18} />
                    </div>
-                   <div className="text-[9px] font-mono text-ink-hint">
-                      {zone.risk > 1 ? '+10% Risk' : zone.risk < 1 ? '-15% Risk' : 'Baseline'}
+                   <div>
+                      <div className="text-xs font-bold text-ink-primary">{benefit.title}</div>
+                      <div className="text-[9px] text-ink-hint uppercase font-bold tracking-widest">{benefit.detail}</div>
                    </div>
                 </Card>
               ))}
            </div>
         </section>
 
-        {/* Payout Adjustment */}
-        <section className="space-y-4">
-           <div className="flex justify-between items-end">
-              <label className="text-heading text-sm">Payout Target</label>
-              <div className="text-mono-l text-ink-primary">{Math.round(payoutMultiplier * 100)}%</div>
-           </div>
-           <input 
-             type="range" min="0.5" max="2.0" step="0.1" value={payoutMultiplier} 
-             onChange={(e) => setPayoutMultiplier(parseFloat(e.target.value))}
-             className="w-full h-2 bg-surface-sunken rounded-full appearance-none accent-ink-primary cursor-pointer"
-           />
-           <div className="flex justify-between text-[9px] text-ink-hint uppercase font-bold tracking-widest">
-              <span>₹150 / event</span>
-              <span>₹600 / event</span>
-           </div>
-        </section>
-
-        {/* Actuarial Summary Card */}
-        <Card className="p-6 bg-surface-raised border border-border-light space-y-4">
+        {/* Integration Note */}
+        <section className="bg-surface-raised border border-border-light p-6 rounded-[32px] space-y-4 relative">
            <div className="flex items-center gap-3">
-              <Settings2 className="text-ink-primary" size={20} />
-              <h4 className="text-subheading text-xs uppercase tracking-widest underline underline-offset-4 decoration-primary/20">Dynamic Pricing Logic</h4>
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                 <Sparkles size={20} />
+              </div>
+              <h4 className="text-subheading text-xs">AI Smart Suggest</h4>
            </div>
-           <div className="space-y-2">
-              <div className="flex justify-between text-[10px]">
-                 <span className="text-ink-muted">Base Underwriting</span>
-                 <span className="text-ink-primary font-mono">₹49.00</span>
-              </div>
-              <div className="flex justify-between text-[10px]">
-                 <span className="text-ink-muted">Zone Surcharge</span>
-                 <span className={cn("font-mono", calculatedPremium > 49 ? "text-status-danger" : "text-status-success")}>
-                   {calculatedPremium > 49 ? '+' : ''}₹{calculatedPremium - 49}.00
-                 </span>
-              </div>
-              <div className="h-[1px] bg-border-light w-full" />
-              <div className="flex justify-between text-[10px] font-bold">
-                 <span className="text-ink-primary uppercase tracking-widest">Calculated Premium</span>
-                 <span className="text-ink-primary font-mono text-xs">₹{calculatedPremium}.00</span>
-              </div>
-           </div>
-        </Card>
+           <p className="text-[10px] text-ink-muted leading-relaxed">
+             Based on your ride history in Koramangala, we recommend a **₹2,500 Coverage Cap** at **70% Sensitivity** for optimal protection during the monsoon season.
+           </p>
+           <Button variant="ghost" className="p-0 text-primary h-auto text-[9px] uppercase tracking-widest font-bold">
+              Apply Smart Plan <ArrowRight size={12} className="ml-1" />
+           </Button>
+        </section>
       </main>
 
-      <footer className="p-6 pb-12 sticky bottom-0 bg-surface-base/80 backdrop-blur-md border-t border-border-light">
-         <Button className="w-full h-14 bg-[#FF6B2B] hover:bg-[#E8571A] text-white border-none uppercase tracking-widest font-bold shadow-cta">
-           Save & Confirm Plan
+      <footer className="fixed bottom-0 left-0 w-full p-6 pb-12 bg-gradient-to-t from-surface-base via-surface-base to-transparent flex flex-col items-center">
+         <Button className="w-full h-14 uppercase tracking-widest group shadow-cta bg-[#FF6B2B] hover:bg-[#E8571A] text-white border-none rounded-2xl">
+            Confirm Policy Armor <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
          </Button>
       </footer>
     </MobileWrapper>
