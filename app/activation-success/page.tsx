@@ -132,8 +132,8 @@ export default function ActivationSuccess() {
         </div>
 
         <div className="space-y-3">
-          <Button className="w-full h-14 uppercase tracking-widest group" onClick={() => router.push('/dashboard')}>
-            Go to Dashboard <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
+          <Button className="w-full h-14 uppercase tracking-widest group" onClick={() => router.push('/kyc')}>
+            Verify ID to Finalize <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
           <Button variant="ghost" className="w-full text-ink-muted">
             <Share2 size={16} className="mr-2" /> Share with colleagues

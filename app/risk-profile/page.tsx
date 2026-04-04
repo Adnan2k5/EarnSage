@@ -149,18 +149,14 @@ export default function RiskAnalysis() {
         </div>
 
         <div className="w-full space-y-8 relative z-10">
-          <div className="text-center space-y-2">
-            <h2 className="text-display-m text-white/40 font-mono tracking-widest text-[10px] uppercase">Neural Network Processing</h2>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={stepIndex}
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                className="flex flex-col items-center gap-1"
-              >
-                <div className="text-xs font-bold text-white uppercase tracking-widest">{scanningSteps[stepIndex].text}</div>
-                <div className="text-[9px] font-mono text-primary uppercase">Node: {scanningSteps[stepIndex].node}</div>
-              </motion.div>
-            </AnimatePresence>
+          <div className="text-center space-y-4">
+             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/10 text-[10px] font-bold text-white uppercase tracking-widest">
+               <ShieldCheck size={14} className="text-primary" />
+               Model AUC: 0.847 • Trained on 618,310 points
+             </div>
+             <p className="text-[11px] text-white/60 max-w-[280px] mx-auto leading-relaxed">
+               Neural engines are analyzing multi-sensor telemetry for your specific sector.
+             </p>
           </div>
 
           {/* Terminal Box */}
@@ -312,7 +308,7 @@ export default function RiskAnalysis() {
               </div>
               <Button 
                 onClick={() => router.push('/dashboard')}
-                className="w-full h-14 bg-white text-primary uppercase font-black tracking-[0.2em] text-[11px] rounded-2xl hover:bg-slate-100 transition-all shadow-xl"
+                className="w-full h-14 bg-white text-ink-primary uppercase font-black tracking-[0.2em] text-[11px] rounded-2xl hover:bg-slate-100 transition-all shadow-xl"
               >
                 Engage Protection <Zap size={16} className="ml-2 fill-primary" />
               </Button>

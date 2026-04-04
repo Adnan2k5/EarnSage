@@ -55,13 +55,12 @@ export default function RootLayout({
       <body className="antialiased">
         <AppProvider>
           <NotificationBar />
-          <MobileWrapper>
+          <div className="min-h-screen bg-[#CBD5E1]">
             <PageTransition>
               {children}
             </PageTransition>
-            {/* BottomNav is handled inside individual page layouts or via a client component check */}
             <ChatBot />
-          </MobileWrapper>
+          </div>
         </AppProvider>
         <Analytics />
       </body>
